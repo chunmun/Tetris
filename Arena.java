@@ -121,7 +121,7 @@ class Room{
 			return;
 		}
 		avg_turns = ((runs * avg_turns) + state.getTurnNumber()) / (runs + 1); 
-		avg_rows = ((runs * avg_rows) + state.getTurnNumber()) / (runs + 1); 		
+		avg_rows = ((runs * avg_rows) + state.getRowsCleared()) / (runs + 1); 		
 		runs++;
 	}
 	
