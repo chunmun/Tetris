@@ -6,5 +6,5 @@ Do remember to make the necessary changes within the code. I've only added your 
 
 Hi all, Chunmun will be chopping his head to come up with some testing code. Purpose of which is to run each algorithm against each other and produce some sort of statistics for comparison. Should be done by the weekend if he's still alive.
 
-
+Hi, testing from HQ.
 
