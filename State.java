@@ -1,3 +1,4 @@
+package blueBlox;
 import java.awt.Color;
 
 
@@ -142,6 +143,10 @@ public class State {
 
 	public int getNextPiece() {
 		return nextPiece;
+	}
+	
+	public void setNextPiece(int p) {
+		this.nextPiece = p;
 	}
 	
 	public boolean hasLost() {

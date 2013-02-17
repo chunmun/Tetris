@@ -1,5 +1,5 @@
-
-public class PlayerSkeleton {
+package blueBlox;
+public class SkeletonShawn {
 
 	//implement this function to have a working system
 	public int pickMove(State s, int[][] legalMoves) {
