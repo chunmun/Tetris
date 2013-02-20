@@ -17,6 +17,7 @@ public class Arena {
 		Vector<IPlayer> players = new Vector<IPlayer>();
 		players.add(new PlayerRandom());
 		players.add(new PlayerSkeleton());
+		players.add(new PlayerGreedLowHeight());
 
 		// 2. Choose a generator - RANDOM, FIXED, FUNC
 		StateGenerator sg = new StateGenerator(SG_TYPE.RANDOM);
@@ -75,7 +76,7 @@ public class Arena {
 		System.out.println("#Runs : " + this.runs);
 		System.out.println("Generator Type: " + sg.type);
 		System.out.println("\n===== Player Statistics =====");
-		System.out.println("Name\t\tTurns Lasted\tRows Cleared");
+		System.out.println(String.format("%1$-20s | %2$12s | %3$12s","Name","Turns Lasted","Rows Cleared"));
 		
 		for(int i=0;i<active_rooms.size();i++){
 			Room r = active_rooms.get(i);
@@ -83,9 +84,7 @@ public class Arena {
 			double turns = r.avg_turns;
 			double rows_cleared = r.avg_rows;
 			
-			DecimalFormat df = new DecimalFormat("#.#####");
-			
-			System.out.println(name+"\t\t"+df.format(turns)+"\t"+df.format(rows_cleared));
+			System.out.println(String.format("%1$-20s | %2$12f | %3$12f",name,turns,rows_cleared));
 		}
 	}
 	
