@@ -19,6 +19,8 @@ public class Arena {
 		players.add(new PlayerGreedLeastH());
 		players.add(new PlayerGreedMakeRow());
 		players.add(new PlayerGreedLeastGap());
+		players.add(new PlayerGreedLessGap(2));
+		
 
 		// 2. Choose a generator - RANDOM, FIXED, FUNC
 		StateGenerator sg = new StateGenerator(SG_TYPE.RANDOM);

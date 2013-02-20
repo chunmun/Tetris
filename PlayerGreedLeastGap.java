@@ -27,7 +27,7 @@ public class PlayerGreedLeastGap extends PlayerGreed implements IPlayer{
 			int[][] suc_field = successorField(legalMoves[i], s.getTurnNumber() + 1, piece);
 			int[] gaps = findGapsPerCol(suc_field);
 			int g = sumGaps(gaps);
-			int h = fTop[slot];
+			int h = getTop(legalMoves[i], suc_field);
 			
 			if(g < g0){
 				g_choice = i;
@@ -56,6 +56,19 @@ public class PlayerGreedLeastGap extends PlayerGreed implements IPlayer{
 		return g;
 	}
 	
+	protected int getTop(int[] move, int[][] field){
+		int[] top = generateFTop(field);
+		int orient = move[ORIENT];
+		int slot = move[SLOT];
+		
+		int height = 0; 
+		for(int c = 0; c < pWidth[piece][orient]; c++){
+			height = Math.max(height, top[slot+c] - pBottom[piece][orient][c]);
+		}
+		
+		return height;
+	}
+	
 	public static void main(String args[]){
 		State s = new State();
 		new TFrame(s);
@@ -72,5 +85,4 @@ public class PlayerGreedLeastGap extends PlayerGreed implements IPlayer{
 		}
 		System.out.println("You have completed "+s.getRowsCleared()+" rows.");
 	}
-	
 }
