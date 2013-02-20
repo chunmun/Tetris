@@ -104,6 +104,7 @@ public class PlayerGreed implements IPlayer {
 	
 	// ===== General Field Methods =====
 	
+	// Returns an array containing the max ROW in each COL of the field
 	protected int[] generateFTop(int[][] field){
 		int new_top[] = new int[COLS];
 		for(int i = 0; i < COLS; i++){
@@ -117,6 +118,7 @@ public class PlayerGreed implements IPlayer {
 		return new_top;
 	}
 	
+	// Returns the max ROW index of the field
 	protected int findMaxHeight(int[][] field){
 		int height = 0;
 		int[] top = generateFTop(field);
@@ -126,6 +128,7 @@ public class PlayerGreed implements IPlayer {
 		return height;
 	}	
 	
+	// Return an array of ROW indices in the field that have complete rows
 	protected int[] findCompleteRows(int[][] field){
 		Vector<Integer> found = new Vector<Integer>();
 		for(int i=0; i < ROWS; i++){
@@ -149,5 +152,21 @@ public class PlayerGreed implements IPlayer {
 			found_arr[i] = found.get(i);
 		}
 		return found_arr;
+	}
+	
+	// Returns an array of the number of gaps in each COL in the field
+	protected int[] findGapsPerCol(int[][] field){
+		int[] gaps = new int[COLS];
+		int[] top = generateFTop(field);
+		
+		for(int i = 0; i < COLS; i++){
+			for(int j = 0; j < top[i]; j++){
+				if(field[j][i] == 0){
+					gaps[i]++;
+				}
+			}
+		}
+		
+		return gaps;
 	}
 }

@@ -8,7 +8,7 @@ package blueBlox;
  * @author chunmun
  *
  */
-public class PlayerGreedLowHeight extends PlayerGreed implements IPlayer {
+public class PlayerGreedLeastH extends PlayerGreed implements IPlayer {
 	@Override
 	protected int makeGreedyChoice(State s, int[][] legalMoves){
 		int h0 = ROWS + 10;

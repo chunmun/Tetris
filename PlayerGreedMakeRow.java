@@ -43,8 +43,10 @@ public class PlayerGreedMakeRow extends PlayerGreed implements IPlayer {
 		new TFrame(s);
 		PlayerGreedMakeRow p = new PlayerGreedMakeRow();
 		while(!s.hasLost()) {
+			s.setNextPiece(1);
 			s.makeMove(p.pickMove(s,s.legalMoves()));
 			s.draw();
+			s.setNextPiece(1);
 			s.drawNext(0,0);
 			try {
 				Thread.sleep(300);

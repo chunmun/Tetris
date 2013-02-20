@@ -16,8 +16,9 @@ public class Arena {
 		Vector<IPlayer> players = new Vector<IPlayer>();
 		players.add(new PlayerRandom());
 		players.add(new PlayerSkeleton());
-		players.add(new PlayerGreedLowHeight());
+		players.add(new PlayerGreedLeastH());
 		players.add(new PlayerGreedMakeRow());
+		players.add(new PlayerGreedLeastGap());
 
 		// 2. Choose a generator - RANDOM, FIXED, FUNC
 		StateGenerator sg = new StateGenerator(SG_TYPE.RANDOM);
