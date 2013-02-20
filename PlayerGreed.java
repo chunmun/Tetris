@@ -1,5 +1,7 @@
 package blueBlox;
 
+import java.util.Vector;
+
 /**
  * Superclass of Greedy Players
  * Meant to be extended and makeGreedyChoice should be overwritten with a Greedy Algo
@@ -100,6 +102,8 @@ public class PlayerGreed implements IPlayer {
 		System.out.println("}");
 	}
 	
+	// ===== General Field Methods =====
+	
 	protected int[] generateFTop(int[][] field){
 		int new_top[] = new int[COLS];
 		for(int i = 0; i < COLS; i++){
@@ -111,5 +115,39 @@ public class PlayerGreed implements IPlayer {
 			}
 		}
 		return new_top;
+	}
+	
+	protected int findMaxHeight(int[][] field){
+		int height = 0;
+		int[] top = generateFTop(field);
+		for(int i = 0; i < top.length; i++){
+			height = Math.max(height, top[i]);
+		}
+		return height;
+	}	
+	
+	protected int[] findCompleteRows(int[][] field){
+		Vector<Integer> found = new Vector<Integer>();
+		for(int i=0; i < ROWS; i++){
+			boolean full = true;
+			
+			for(int j=0; j < COLS; j++){
+				if(field[i][j] != 0){
+					full = false;
+					break;
+				}
+			}
+			
+			if(full){
+				found.add(i);
+			}
+		}
+	
+		// Convert Vector back to int[]
+		int[] found_arr = new int[found.size()];
+		for(int i = 0; i < found.size(); i++){
+			found_arr[i] = found.get(i);
+		}
+		return found_arr;
 	}
 }

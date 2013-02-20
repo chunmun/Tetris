@@ -11,39 +11,18 @@ package blueBlox;
 public class PlayerGreedLowHeight extends PlayerGreed implements IPlayer {
 	@Override
 	protected int makeGreedyChoice(State s, int[][] legalMoves){
-		int n0 = ROWS + 10;
+		int h0 = ROWS + 10;
 		int choice = 0;
 		
-		for(int i=0;i<legalMoves.length;i++){
+		for(int i = 0; i < legalMoves.length; i++){
 			int[][] suc_field = successorField(legalMoves[i], s.getTurnNumber() + 1, piece);
-			int n = findMaxHeight(suc_field);
+			int h = findMaxHeight(suc_field);
 			
-			if(n < n0){
+			if(h < h0){
 				choice = i;
-				n0 = n;
+				h0 = h;
 			}
 		}		
 		
-		for(int i=0;i<legalMoves.length;i++){
-			int[][] suc_field = successorField(legalMoves[i], s.getTurnNumber() + 1, piece);
-			int n = findMaxHeight(suc_field);
-			
-			if(n < n0){
-				choice = i;
-				n0 = n;
-			}
-		}
-		
 		return choice;	}
-	
-	protected int findMaxHeight(int[][] field){
-		int height = 0;
-		int[] top = generateFTop(field);
-		for(int i = 0; i < top.length; i++){
-			height = Math.max(height, top[i]);
-		}
-		return height;
-	}
-	
-
 }
