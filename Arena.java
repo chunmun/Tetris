@@ -14,12 +14,17 @@ public class Arena {
 	public static void main(String args[]){
 		// 1. Add your player into players
 		Vector<IPlayer> players = new Vector<IPlayer>();
-		players.add(new PlayerRandom());
-		players.add(new PlayerSkeleton());
-		players.add(new PlayerGreedLeastH());
-		players.add(new PlayerGreedMakeRow());
-		players.add(new PlayerGreedLeastGap());
-		players.add(new PlayerGreedLessGap(2));
+//		players.add(new PlayerRandom());
+//		players.add(new PlayerSkeleton());
+//		players.add(new PlayerGreedLeastH());
+//		players.add(new PlayerGreedFlatTop());
+//		players.add(new PlayerGreedMakeRow());
+//		players.add(new PlayerGreedLeastGapH());
+//		players.add(new PlayerGLeastGMake());
+//		players.add(new PlayerGreedLessGapH(2));
+		players.add(new PlayerGreedLeastGapF());
+		players.add(new PlayerGreedLessGapF(2));
+//		players.add(new PlayerGLessGMake(2));
 		
 
 		// 2. Choose a generator - RANDOM, FIXED, FUNC

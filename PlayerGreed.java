@@ -169,4 +169,44 @@ public class PlayerGreed implements IPlayer {
 		
 		return gaps;
 	}
+	
+	protected int[] findDeadGapsPerCol(int[][] field){
+		int[] gaps = findGapsPerCol(field);
+		int[] top = generateFTop(field);
+		
+		if(top[1] - top[0] > 4){
+			gaps[0] += top[1] - top[0] - 4;
+		}
+		
+		for(int i = 1; i < COLS - 1; i++){
+			int diff = Math.min(top[i-1] - top[i], top[i+1] - top[i]);
+			if(diff > 4){
+				gaps[i] += diff - 4;
+			}
+		}
+		
+		if(top[COLS-2] - top[COLS-1] > 4){
+			gaps[COLS-1] += top[COLS-2] - top[COLS-1] - 4;
+		}
+		
+		return gaps;
+	}
+	
+	// Returns the sum of the absolute difference in height between each adjacent column
+	protected int getTopDiff(int[] top){
+		int d = 0;
+		for(int i = 0; i < top.length-1; i++){
+			d += Math.abs(top[i+1] - top[i]);
+		}
+		return d;
+	}
+	
+	// Returns the sum of the square of difference in height between each adj column
+	protected int getTopDiffSq(int[] top){
+		int d = 0;
+		for(int i = 0; i < top.length-1; i++){
+			d += Math.pow(top[i+1] - top[i], 2);
+		}
+		return d;
+	}
 }

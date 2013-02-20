@@ -4,24 +4,24 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * This Player is slightly less greedy than PlayerGreedLeastGap
+ * This Player is slightly less greedy than PlayerGreedLeastGapH
  * It actually considers the choices that are close to the lowest gap values
- * and choose the one with the least height.
+ * and choose the one that completes the most rows 
  * 
  * The closeness is determined by TOLERANCE
- * Refer to PlayerGreedLeastGap for more
+ * Refer to PlayerGreedLeastGapH for more
  * 
  * @author chunmun
  *
  */
-public class PlayerGreedLessGap extends PlayerGreed implements IPlayer {
+public class PlayerGLessGMake extends PlayerGreed implements IPlayer {
 	protected int TOLERANCE = 1;
 	
-	public PlayerGreedLessGap(){
+	public PlayerGLessGMake(){
 		super();
 	}
 	
-	public PlayerGreedLessGap(int tol){
+	public PlayerGLessGMake(int tol){
 		super();
 		this.TOLERANCE = tol;
 	}
@@ -36,13 +36,19 @@ public class PlayerGreedLessGap extends PlayerGreed implements IPlayer {
 			int[][] suc_field = successorField(legalMoves[i], s.getTurnNumber() + 1, piece);
 			int[] gaps = findGapsPerCol(suc_field);
 			int g = sumGaps(gaps);
-			int h = getTop(legalMoves[i], suc_field);
+			int h = findCompleteRows(suc_field).length;
 //			System.out.println("Move: "+i+" Orient: "+legalMoves[i][0]+" Slot: "+legalMoves[i][1]+" h:"+h+" g:"+g);
+//			int[] dt = generateFTop(suc_field);
+//			System.out.print("[");
+//			for(int k = 0; k < COLS; k++){
+//				System.out.print(dt[k]);
+//			}
+//			System.out.println("]");
 			
 			if(g_choices.get(g) != null){
 				Choice c = g_choices.get(g);
 				// Change the choice to the current move if this one has a lower height 
-				if(c.h_value > h){
+				if(c.h_value < h){
 					c.move = i;
 					c.h_value = h;
 				}
@@ -102,26 +108,18 @@ public class PlayerGreedLessGap extends PlayerGreed implements IPlayer {
 		return g;
 	}
 	
-	protected int getTop(int[] move, int[][] field){
-		int[] top = generateFTop(field);
-		int orient = move[ORIENT];
-		int slot = move[SLOT];
-		
-		int height = 0; 
-		for(int c = 0; c < pWidth[piece][orient]; c++){
-			height = Math.max(height, top[slot+c] - pBottom[piece][orient][c]);
-		}
-		
-		return height;
-	}
-	
 	public static void main(String args[]){
 		State s = new State();
 		new TFrame(s);
-		PlayerGreedLessGap p = new PlayerGreedLessGap();
-		while(!s.hasLost()) {
+		PlayerGLessGMake p = new PlayerGLessGMake();
+//		int d = 0;
+//		while(d < 9) {
+//			d++;
+		while(!s.hasLost()){
+//			s.setNextPiece(1);
 			s.makeMove(p.pickMove(s,s.legalMoves()));
 			s.draw();
+//			s.setNextPiece(1);
 			s.drawNext(0,0);
 			try {
 				Thread.sleep(100);
@@ -130,17 +128,5 @@ public class PlayerGreedLessGap extends PlayerGreed implements IPlayer {
 			}
 		}
 		System.out.println("You have completed "+s.getRowsCleared()+" rows.");
-	}
-}
-
-class Choice{
-	public int g_value;
-	public int h_value;
-	public int move;
-	
-	public Choice(int move, int g_value, int h_value){
-		this.move = move;
-		this.g_value = g_value;
-		this.h_value = h_value;
 	}
 }
