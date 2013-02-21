@@ -22,9 +22,11 @@ public class Arena {
 //		players.add(new PlayerGreedLeastGapH());
 //		players.add(new PlayerGLeastGMake());
 //		players.add(new PlayerGreedLessGapH(2));
-		players.add(new PlayerGreedLeastGapF());
-		players.add(new PlayerGreedLessGapF(2));
+//		players.add(new PlayerGreedLeastGapF());
+//		players.add(new PlayerGreedLessGapF(2));
 //		players.add(new PlayerGLessGMake(2));
+//		players.add(new PlayerGMixedRankGHF());
+		players.add(new PlayerGPDelleCherie());
 		
 
 		// 2. Choose a generator - RANDOM, FIXED, FUNC

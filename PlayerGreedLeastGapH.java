@@ -46,14 +46,6 @@ public class PlayerGreedLeastGapH extends PlayerGreed implements IPlayer{
 		return choice;
 	}
 	
-	protected int sumGaps(int[] gaps){
-		int g = 0;
-		for(int j = 0; j < gaps.length; j++){
-			g += gaps[j];
-		}	
-		return g;
-	}
-	
 	protected int getTop(int[] move, int[][] field){
 		int[] top = generateFTop(field);
 		int orient = move[ORIENT];

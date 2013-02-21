@@ -133,14 +133,3 @@ public class PlayerGreedLessGapH extends PlayerGreed implements IPlayer {
 	}
 }
 
-class Choice{
-	public int g_value;
-	public int h_value;
-	public int move;
-	
-	public Choice(int move, int g_value, int h_value){
-		this.move = move;
-		this.g_value = g_value;
-		this.h_value = h_value;
-	}
-}
