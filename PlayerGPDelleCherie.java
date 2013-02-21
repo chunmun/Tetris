@@ -23,15 +23,16 @@ public class PlayerGPDelleCherie extends PlayerGreed implements IPlayer{
 	public int makeGreedyChoice(State s, int[][] legalMoves){
 		int choice = 0;
 		int score0 = Integer.MIN_VALUE;
+		int[][] suc_field = cloneField(field);
 		
 		for(int i = 0; i < legalMoves.length; i++){
-			int[][] suc_field = successorField(legalMoves[i], s.getTurnNumber() + 1, piece);
+			suc_field = successorField(legalMoves[i], s.getTurnNumber() + 1, piece);
 		
 			// Landing Height
 			int h_value = findInsertHeight(legalMoves[i], suc_field);
 			
 			// Eroded Piece metric = #cells removed * #rows removed = #rows removed * COLS 
-			int r_value = findCompleteRows(suc_field).length * COLS;
+			int r_value = findCompleteRows(suc_field).length;
 			
 			// ==== IMPT We are removing the complete rows now! =====
 			suc_field = collapseField(suc_field);
@@ -56,7 +57,7 @@ public class PlayerGPDelleCherie extends PlayerGreed implements IPlayer{
 			// Compute a weighted sum
 			int score = 0;
 			score += -1 * h_value;
-			score += r_value;
+			score += 1 * r_value;
 			score += -1 * row_value;
 			score += -1 * col_value;
 			score += -5 * g_value;
@@ -76,17 +77,17 @@ public class PlayerGPDelleCherie extends PlayerGreed implements IPlayer{
 	public static void main(String args[]){
 		
 		State s = new State();
-		new TFrame(s);
+//		new TFrame(s);
 		PlayerGPDelleCherie p = new PlayerGPDelleCherie();
 		while(!s.hasLost()) {
 			s.makeMove(p.pickMove(s,s.legalMoves()));
-			s.draw();
-			s.drawNext(0,0);
-			try {
-				Thread.sleep(50);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+//			s.draw();
+//			s.drawNext(0,0);
+//			try {
+//				Thread.sleep(5);
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			}
 		}
 		System.out.println("You have completed "+s.getRowsCleared()+" rows.");
 	}	

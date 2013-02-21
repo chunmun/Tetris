@@ -113,18 +113,18 @@ public class PlayerGreed implements IPlayer {
 	protected int[][] collapseField(int[][] field){
 		int row = field.length;
 		int col = field[0].length;
-		int[][] suc_field = cloneField(field);
+//		int[][] suc_field = cloneField(field);
 		
 		int full_rows[] = findCompleteRows(field);
 		
 		int rows_removed = 0;
 		for(int i = 0; i < full_rows.length; i++){
 			int row_ind = full_rows[i] - rows_removed;
-			suc_field = removeFRow(suc_field,row_ind);
+			field = removeFRow(field,row_ind);
 			rows_removed++;
 		}
 		
-		return suc_field;
+		return field;
 	}
 	
 	// Deep clones the field
@@ -142,16 +142,13 @@ public class PlayerGreed implements IPlayer {
 		return suc_field;
 	}
 	
-	// Return a new field with a particular row removed and the columns collasped
+	// Return the same field with a particular row removed and the columns collasped
 	protected int[][] removeFRow(int[][] field, int r){
 		int row = field.length;
 		int col = field[0].length;
-		int[][] suc_field = cloneField(field);
 		
 		for(int i = r; i < row - 1; i++){
-			for(int j = 0; j < col; j++){
-				field[i][j] = field[i+1][j];
-			}
+			field[i] = field[i+1];
 		}
 		
 		// Set the top row to 0
@@ -159,7 +156,7 @@ public class PlayerGreed implements IPlayer {
 			field[row-1][j] = 0;
 		}
 		
-		return suc_field;
+		return field;
 	}
 	
 	// Returns an array containing the max ROW in each COL of the field

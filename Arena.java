@@ -34,7 +34,7 @@ public class Arena {
 
 		// 3. Let it rip with the number of runs
 		Arena Rumble = new Arena(players,sg);
-		Rumble.run(1000);
+		Rumble.run(100);
 	}
 
 	public Arena(Vector<IPlayer> players, StateGenerator sg){
