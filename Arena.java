@@ -1,6 +1,5 @@
 package blueBlox;
 
-import java.text.DecimalFormat;
 import java.util.Vector;
 
 import blueBlox.StateGenerator.SG_TYPE;
@@ -15,16 +14,27 @@ public class Arena {
 	public static void main(String args[]){
 		// 1. Add your player into players
 		Vector<IPlayer> players = new Vector<IPlayer>();
-		players.add(new PlayerRandom());
-		players.add(new PlayerSkeleton());
-		players.add(new PlayerGreedLowHeight());
+//		players.add(new PlayerRandom());
+//		players.add(new PlayerSkeleton());
+//		players.add(new PlayerGreedLeastH());
+//		players.add(new PlayerGreedFlatTop());
+//		players.add(new PlayerGreedMakeRow());
+//		players.add(new PlayerGreedLeastGapH());
+//		players.add(new PlayerGLeastGMake());
+//		players.add(new PlayerGreedLessGapH(2));
+//		players.add(new PlayerGreedLeastGapF());
+//		players.add(new PlayerGreedLessGapF(2));
+//		players.add(new PlayerGLessGMake(2));
+//		players.add(new PlayerGMixedRankGHF());
+		players.add(new PlayerGPDelleCherie());
+		players.add(new ShawnGreed());
 
 		// 2. Choose a generator - RANDOM, FIXED, FUNC
 		StateGenerator sg = new StateGenerator(SG_TYPE.RANDOM);
 
 		// 3. Let it rip with the number of runs
 		Arena Rumble = new Arena(players,sg);
-		Rumble.run(1000);
+		Rumble.run(100);
 	}
 
 	public Arena(Vector<IPlayer> players, StateGenerator sg){
