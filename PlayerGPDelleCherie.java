@@ -19,6 +19,28 @@ import java.util.Vector;
  *
  */
 public class PlayerGPDelleCherie extends PlayerGreed implements IPlayer{
+	// Initial coefficient of the weights in the combined heuristic score
+//	protected int cof_h = -1, cof_r = 1, cof_row = -1, cof_col = -1, cof_g = -5, cof_w = -1;
+	protected int cof_h = 0, cof_r = 2, cof_row = -1, cof_col = -1, cof_g = -4, cof_w = -2;
+	
+	public PlayerGPDelleCherie(){
+		super();
+	}
+	
+	public PlayerGPDelleCherie(int[] cofs) throws Exception{
+		super();
+		if(cofs.length != 6){
+			throw new Exception("GG lah, wrong number of coefficients");
+		}
+		
+		this.cof_h = cofs[0];
+		this.cof_r = cofs[1];
+		this.cof_row = cofs[2];
+		this.cof_col = cofs[3];
+		this.cof_g = cofs[4];
+		this.cof_w = cofs[5];
+	}
+	
 	@Override
 	public int makeGreedyChoice(State s, int[][] legalMoves){
 		int choice = 0;
@@ -56,12 +78,12 @@ public class PlayerGPDelleCherie extends PlayerGreed implements IPlayer{
 			
 			// Compute a weighted sum
 			int score = 0;
-			score += -1 * h_value;
-			score += 1 * r_value;
-			score += -1 * row_value;
-			score += -1 * col_value;
-			score += -5 * g_value;
-			score += -1 * w_value;
+			score += cof_h * h_value;
+			score += cof_r * r_value;
+			score += cof_row * row_value;
+			score += cof_col * col_value;
+			score += cof_g * g_value;
+			score += cof_w * w_value;
 			
 			if(score > score0){
 				score0 = score;
@@ -84,11 +106,13 @@ public class PlayerGPDelleCherie extends PlayerGreed implements IPlayer{
 //			s.draw();
 //			s.drawNext(0,0);
 //			try {
-//				Thread.sleep(5);
+//				Thread.sleep(10);
 //			} catch (InterruptedException e) {
 //				e.printStackTrace();
 //			}
 		}
 		System.out.println("You have completed "+s.getRowsCleared()+" rows.");
 	}	
+	
+	
 }
