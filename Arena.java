@@ -86,15 +86,17 @@ public class Arena {
 		System.out.println("#Runs : " + this.runs);
 		System.out.println("Generator Type: " + sg.type);
 		System.out.println("\n===== Player Statistics =====");
-		System.out.println(String.format("%1$-20s | %2$12s | %3$12s","Name","Turns Lasted","Rows Cleared"));
+		System.out.println(String.format("%1$-20s | %2$12s | %3$12s | %4$12s | %5$12s","Name","Turns Lasted","Rows Cleared", "Minimum Rows", "Maximum Rows"));
 		
 		for(int i=0;i<active_rooms.size();i++){
 			Room r = active_rooms.get(i);
 			String name = r.player.getClass().getSimpleName();
 			double turns = r.avg_turns;
 			double rows_cleared = r.avg_rows;
+			int minRows = r.min_rows;
+			int maxRows = r.max_rows;
 			
-			System.out.println(String.format("%1$-20s | %2$12f | %3$12f",name,turns,rows_cleared));
+			System.out.println(String.format("%1$-20s | %2$12f | %3$12f | %4$12d | %5$12d",name,turns,rows_cleared,minRows,maxRows));
 		}
 	}
 	
@@ -116,6 +118,8 @@ class Room{
 	public int runs = 0;
 	public double avg_turns = 0.0;
 	public double avg_rows = 0.0;
+	public int min_rows = 1000000;
+	public int max_rows = 0;
 
 	public Room(IPlayer p, State s){
 		this.player = p;
@@ -130,7 +134,9 @@ class Room{
 			return;
 		}
 		avg_turns = ((runs * avg_turns) + state.getTurnNumber()) / (runs + 1); 
-		avg_rows = ((runs * avg_rows) + state.getRowsCleared()) / (runs + 1); 		
+		avg_rows = ((runs * avg_rows) + state.getRowsCleared()) / (runs + 1);
+		min_rows = min_rows < state.getRowsCleared() ? min_rows : state.getRowsCleared();
+		max_rows = max_rows > state.getRowsCleared() ? max_rows : state.getRowsCleared();
 		runs++;
 	}
 	
