@@ -18,15 +18,17 @@ import java.util.Vector;
  * @author chunmun
  *
  */
-public class PlayerGPDelleCherie extends PlayerGreed implements IPlayer{
+public class PGPDelleCherie2Move extends PlayerGreed implements IPlayer{
 	// Initial coefficient of the weights in the combined heuristic score
-	protected int cof_h = -1, cof_r = 1, cof_row = -1, cof_col = -1, cof_g = -5, cof_w = -1;
+//	protected int cof_h = -1, cof_r = 1, cof_row = -1, cof_col = -1, cof_g = -5, cof_w = -1;
+//[0, 1, -8, -9, -8, -7]
+	protected int cof_h = 0, cof_r = 1, cof_row = -8, cof_col = -9, cof_g = -8, cof_w = -7;
 	
-	public PlayerGPDelleCherie(){
+	public PGPDelleCherie2Move(){
 		super();
 	}
 	
-	public PlayerGPDelleCherie(int[] cofs) throws Exception{
+	public PGPDelleCherie2Move(int[] cofs) throws Exception{
 		super();
 		if(cofs.length != 6){
 			throw new Exception("GG lah, wrong number of coefficients");
@@ -48,9 +50,48 @@ public class PlayerGPDelleCherie extends PlayerGreed implements IPlayer{
 		
 		for(int i = 0; i < legalMoves.length; i++){
 			suc_field = successorField(legalMoves[i], s.getTurnNumber() + 1, piece);
+			
+			// Get Pile height
+			int max_height = findMaxHeight(suc_field);
+
+			// ==== IMPT We are removing the complete rows now! =====
+			suc_field = collapseField(suc_field);
+			suc_field = removeExcess(suc_field);
+			
+			System.out.println("i = "+i+ "======================================");
+			int score_next = Integer.MIN_VALUE;
+			for(int nextPiece = 0; nextPiece < N_PIECES; nextPiece++){
+				int score = getBestGreedyScore(suc_field, s.allLegal(nextPiece),s.getTurnNumber()+2, nextPiece);
+				if(score > score_next){
+					score_next = score;
+				}
+				System.out.println("Piece "+nextPiece+" with score = "+score_next);
+			}
+			
+			if(score_next > score0){
+				score0 = score_next;
+				choice = i;
+			}
+		}
+		
+		return choice;
+	}
+	
+	public int getBestGreedyScore(int[][] nextField, int[][] legalMoves, int turn_number, int nextPiece){
+		int score0 = Integer.MIN_VALUE;
+		int[][] suc_field = cloneField(nextField);
+		
+		for(int i = 0; i < legalMoves.length; i++){
+			suc_field = successorFieldStrict(legalMoves[i], turn_number + 1, nextPiece);
+			
+			// Get Pile height
+//			int max_height = findMaxHeight(suc_field);
+//			if(max_height >= ROWS){
+//				return Integer.MIN_VALUE;
+//			}
 		
 			// Landing Height
-			int h_value = findInsertHeight(legalMoves[i], suc_field, piece);
+			int h_value = findInsertHeight(legalMoves[i], suc_field, nextPiece);
 			
 			// Eroded Piece metric = #cells removed * #rows removed = #rows removed * COLS 
 			int r_value = findCompleteRows(suc_field).length;
@@ -86,11 +127,9 @@ public class PlayerGPDelleCherie extends PlayerGreed implements IPlayer{
 			
 			if(score > score0){
 				score0 = score;
-				choice = i;
 			}
 		}
-		
-		return choice;
+		return score0;
 	}
 	
 
@@ -98,17 +137,17 @@ public class PlayerGPDelleCherie extends PlayerGreed implements IPlayer{
 	public static void main(String args[]){
 		
 		State s = new State();
-//		new TFrame(s);
-		PlayerGPDelleCherie p = new PlayerGPDelleCherie();
+		new TFrame(s);
+		PGPDelleCherie2Move p = new PGPDelleCherie2Move();
 		while(!s.hasLost()) {
 			s.makeMove(p.pickMove(s,s.legalMoves()));
-//			s.draw();
-//			s.drawNext(0,0);
-//			try {
-//			Thread.sleep(10);
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			}
+			s.draw();
+			s.drawNext(0,0);
+			try {
+			Thread.sleep(10);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 		System.out.println("You have completed "+s.getRowsCleared()+" rows.");
 	}	

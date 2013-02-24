@@ -28,7 +28,7 @@ public class StateGenerator {
 	
 	public int nextPiece(int turn){
 		int next = getNextPiece(turn);
-		piece_seq.add(next);
+//		piece_seq.add(next);
 		return next;
 	}
 	

@@ -182,6 +182,11 @@ public class State {
 		return legalMoves[nextPiece];
 	}
 	
+	//gives you all the legal moves
+	public int[][] allLegal(int piece){
+		return legalMoves[piece];
+	}
+	
 	//make a move based on the move index - its order in the legalMoves list
 	public void makeMove(int move) {
 		makeMove(legalMoves[nextPiece][move]);

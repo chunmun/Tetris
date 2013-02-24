@@ -17,6 +17,7 @@ public class PlayerGreed implements IPlayer {
 	protected int[][][] pTop;	// [piece][orient][slots]
 	
 	protected int piece;
+	public static final int N_PIECES = 7;
 	
 	protected int[][] field;
 	protected int[] fTop;
@@ -88,6 +89,40 @@ public class PlayerGreed implements IPlayer {
 		// Insert the piece
 		for(int i = 0; i < pWidth[piece][orient]; i++){
 			for(int j = height + pBottom[piece][orient][i]; j < height+pTop[piece][orient][i]; j++){
+				suc_field[j][slot+i] = turn;
+			}
+		}
+		return suc_field;
+	}
+	
+	/*
+	 * Note that this method returns the fields with the complete rows INTACT
+	 */
+	protected int[][] successorFieldStrict(int[] move, int turn, int piece){
+		int[][] suc_field = new int[ROWS+4][COLS]; // Increased rows to accommodate for calculations at the border
+		
+		// Deep clone
+		for(int i = 0; i < field.length; i++){
+			for(int j = 0; j < field[0].length; j++){
+				suc_field[i][j] = field[i][j];
+			}
+		}
+		
+		int orient = move[ORIENT];
+		int slot = move[SLOT];
+		
+		// Determine baseline or insert height
+		int height = 0; 
+		for(int c = 0; c < pWidth[piece][orient]; c++){
+			height = Math.max(height, fTop[slot+c] - pBottom[piece][orient][c]);
+		}
+		
+		// Insert the piece
+		for(int i = 0; i < pWidth[piece][orient]; i++){
+			for(int j = height + pBottom[piece][orient][i]; j < height+pTop[piece][orient][i]; j++){
+				if(j >= ROWS){
+					break;
+				}
 				suc_field[j][slot+i] = turn;
 			}
 		}
@@ -184,7 +219,7 @@ public class PlayerGreed implements IPlayer {
 	}	
 	
 	// Returns the index of the inserted height on the field given this move
-	protected int findInsertHeight(int[] move, int[][] field){
+	protected int findInsertHeight(int[] move, int[][] field, int piece){
 		int[] top = generateFTop(field);
 		int orient = move[ORIENT];
 		int slot = move[SLOT];
@@ -195,6 +230,16 @@ public class PlayerGreed implements IPlayer {
 		}
 		
 		return height;
+	}
+	
+	protected int[][] removeExcess(int[][] x_field){
+		int[][] suc_field = new int[ROWS][COLS];
+		for(int i = 0; i < ROWS; i++){
+			for(int j = 0; j < COLS; j++){
+				suc_field[i][j] = x_field[i][j];
+			}
+		}
+		return suc_field;
 	}
 	
 	// Return an array of ROW indices in the field that have complete rows
