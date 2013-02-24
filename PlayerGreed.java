@@ -98,8 +98,9 @@ public class PlayerGreed implements IPlayer {
 	/*
 	 * Note that this method returns the fields with the complete rows INTACT
 	 */
-	protected int[][] successorFieldStrict(int[] move, int turn, int piece){
+	protected int[][] successorFieldStrict(int[][] field, int[] move, int turn, int piece){
 		int[][] suc_field = new int[ROWS+4][COLS]; // Increased rows to accommodate for calculations at the border
+		int[] top = generateFTop(field);
 		
 		// Deep clone
 		for(int i = 0; i < field.length; i++){
@@ -114,7 +115,7 @@ public class PlayerGreed implements IPlayer {
 		// Determine baseline or insert height
 		int height = 0; 
 		for(int c = 0; c < pWidth[piece][orient]; c++){
-			height = Math.max(height, fTop[slot+c] - pBottom[piece][orient][c]);
+			height = Math.max(height, top[slot+c] - pBottom[piece][orient][c] + 1);
 		}
 		
 		// Insert the piece
@@ -249,7 +250,7 @@ public class PlayerGreed implements IPlayer {
 			boolean full = true;
 			
 			for(int j=0; j < COLS; j++){
-				if(field[i][j] != 0){
+				if(field[i][j] == 0){
 					full = false;
 					break;
 				}

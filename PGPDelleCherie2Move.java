@@ -53,42 +53,52 @@ public class PGPDelleCherie2Move extends PlayerGreed implements IPlayer{
 			
 			// Get Pile height
 			int max_height = findMaxHeight(suc_field);
-
-			// ==== IMPT We are removing the complete rows now! =====
-			suc_field = collapseField(suc_field);
-			suc_field = removeExcess(suc_field);
-			
-			System.out.println("i = "+i+ "======================================");
 			int score_next = Integer.MIN_VALUE;
-			for(int nextPiece = 0; nextPiece < N_PIECES; nextPiece++){
-				int score = getBestGreedyScore(suc_field, s.allLegal(nextPiece),s.getTurnNumber()+2, nextPiece);
-				if(score > score_next){
-					score_next = score;
-				}
-				System.out.println("Piece "+nextPiece+" with score = "+score_next);
-			}
 			
+			if(max_height <= ROWS){
+				// Only proceed to the next move if this move does not cause instant lost
+				// ==== IMPT We are removing the complete rows now! =====
+				suc_field = collapseField(suc_field);
+				suc_field = removeExcess(suc_field);
+				
+				System.out.println("i = "+i+ "======================================");
+
+				for(int nextPiece = 0; nextPiece < N_PIECES; nextPiece++){
+					int score = getBestGreedyScore(suc_field, s.allLegal(nextPiece),s.getTurnNumber()+2, nextPiece);
+					if(score > score_next){
+						score_next = score;
+					}
+				}
+				System.out.println("<<<<<<<<< for i = "+i);
+			}else{
+				System.out.println("Committing suicide now");
+			}
+				
+			
+
 			if(score_next > score0){
 				score0 = score_next;
 				choice = i;
 			}
 		}
 		
+		System.out.println(" =.= Chosen move "+choice+" with score = "+score0);
 		return choice;
 	}
 	
 	public int getBestGreedyScore(int[][] nextField, int[][] legalMoves, int turn_number, int nextPiece){
 		int score0 = Integer.MIN_VALUE;
-		int[][] suc_field = cloneField(nextField);
+		int choice = 0;
 		
 		for(int i = 0; i < legalMoves.length; i++){
-			suc_field = successorFieldStrict(legalMoves[i], turn_number + 1, nextPiece);
+			int[][] suc_field = cloneField(nextField);
+			suc_field = successorFieldStrict(suc_field, legalMoves[i], turn_number, nextPiece);
 			
 			// Get Pile height
-//			int max_height = findMaxHeight(suc_field);
-//			if(max_height >= ROWS){
-//				return Integer.MIN_VALUE;
-//			}
+			int max_height = findMaxHeight(suc_field);
+			if(max_height >= ROWS){
+				return Integer.MIN_VALUE;
+			}
 		
 			// Landing Height
 			int h_value = findInsertHeight(legalMoves[i], suc_field, nextPiece);
@@ -127,8 +137,11 @@ public class PGPDelleCherie2Move extends PlayerGreed implements IPlayer{
 			
 			if(score > score0){
 				score0 = score;
+				choice = i;
 			}
 		}
+		
+		System.out.println("for piece = "+nextPiece+", the best move is with orient "+legalMoves[choice][ORIENT]+" at slot "+legalMoves[choice][SLOT]);
 		return score0;
 	}
 	
@@ -139,10 +152,13 @@ public class PGPDelleCherie2Move extends PlayerGreed implements IPlayer{
 		State s = new State();
 		new TFrame(s);
 		PGPDelleCherie2Move p = new PGPDelleCherie2Move();
-		while(!s.hasLost()) {
+		int times = 2;
+//		while(!s.hasLost()) {
+		while(times > 0){
 			s.makeMove(p.pickMove(s,s.legalMoves()));
 			s.draw();
 			s.drawNext(0,0);
+			times--;
 			try {
 			Thread.sleep(10);
 			} catch (InterruptedException e) {

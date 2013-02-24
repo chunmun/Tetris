@@ -34,7 +34,7 @@ public class Arena {
 
 		// 3. Let it rip with the number of runs
 		Arena Rumble = new Arena(players,sg);
-		Rumble.run(100);
+		Rumble.run(1);
 	}
 
 	public Arena(Vector<IPlayer> players, StateGenerator sg){
@@ -63,6 +63,7 @@ public class Arena {
 					r.state.makeMove(move);
 
 					if(r.state.hasLost()){
+						System.out.println("Ended with "+r.state.getRowsCleared());
 						dead_rooms.add(r);
 						r.collectStat();
 						active_rooms.remove(i);
@@ -71,9 +72,9 @@ public class Arena {
 				}
 				turn++;
 			}
-			
+			//System.out.println("<<<<< Run #"+j+" completed with "+turn+" turns");
 			resetRoomsAndSG();
-//			System.out.println("<<<<< Run #"+j+" completed with "+turn+" turns");
+			
 
 		}
 
