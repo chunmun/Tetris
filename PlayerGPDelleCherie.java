@@ -108,11 +108,11 @@ public class PlayerGPDelleCherie extends PlayerGreed implements IPlayer{
 		State s = new State();
 		new TFrame(s);
 		PlayerGPDelleCherie p = new PlayerGPDelleCherie();
-		long last_time = System.currentTimeMillis();
+//		long last_time = System.currentTimeMillis();
 		while(!s.hasLost()) {
 			s.makeMove(p.pickMove(s,s.legalMoves()));
-			if((System.currentTimeMillis() - last_time) > 10000){
-				last_time = System.currentTimeMillis();
+//			if((System.currentTimeMillis() - last_time) > 10000){
+//				last_time = System.currentTimeMillis();
 				s.draw();
 				s.drawNext(0,0);
 				try {
@@ -120,7 +120,7 @@ public class PlayerGPDelleCherie extends PlayerGreed implements IPlayer{
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}	
-			}
+//			}
 		}
 		s.draw();
 		s.drawNext(0,0);

@@ -183,7 +183,7 @@ public class State {
 	}
 	
 	//gives you all the legal moves
-	public int[][] allLegal(int piece){
+	public int[][] legalMoves(int piece){
 		return legalMoves[piece];
 	}
 	

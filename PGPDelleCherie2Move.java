@@ -64,7 +64,7 @@ public class PGPDelleCherie2Move extends PlayerGreed implements IPlayer{
 				System.out.println("i = "+i+ "======================================");
 
 				for(int nextPiece = 0; nextPiece < N_PIECES; nextPiece++){
-					int score = getBestGreedyScore(suc_field, s.allLegal(nextPiece),s.getTurnNumber()+2, nextPiece);
+					int score = getBestGreedyScore(suc_field, s.legalMoves(nextPiece),s.getTurnNumber()+2, nextPiece);
 					if(score > score_next){
 						score_next = score;
 					}
