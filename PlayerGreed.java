@@ -37,10 +37,58 @@ public class PlayerGreed implements IPlayer {
 		piece = s.getNextPiece();
 		loadAttributes(s);
 		
+		
 		int choice = makeGreedyChoice(s,legalMoves);
 
 		return choice;
 	}
+	
+	public class Thread_GetField implements Runnable{ //Hmm.. Runnable can't return stuff or even get Object parameters to modify...
+		public void run(){}
+		private void run(State s, int[][] field){field = s.getField();}
+		public void main(String args[]){(new Thread(new Thread_GetField())).start();}
+	}
+	
+	protected void cloneFieldSpeedTest(int[][] field){ //my attempt to make it run faster
+		//Attempt: Parallelize the process to make it faster
+		long nanoTimeStart=0, nanoTimeEnd=0;
+		//Start Normal Run Test
+		nanoTimeStart = System.nanoTime();
+		cloneField(field);
+		nanoTimeEnd = System.nanoTime();
+		System.out.println("Time taken for original func: " +String.valueOf(nanoTimeEnd-nanoTimeStart));
+		
+		nanoTimeStart = System.nanoTime();
+		cloneField2(field);
+		nanoTimeEnd = System.nanoTime();
+		System.out.println("Time taken for OPTIMIZED_2 func: " +String.valueOf(nanoTimeEnd-nanoTimeStart));
+
+		nanoTimeStart = System.nanoTime();
+		cloneField_time_createVar(field);
+		nanoTimeEnd = System.nanoTime();
+		System.out.println("Time taken for creating variables: " +String.valueOf(nanoTimeEnd-nanoTimeStart));
+
+		nanoTimeStart = System.nanoTime();
+		//cloneField_time_return(field);
+		nanoTimeEnd = System.nanoTime();
+		System.out.println("Time taken for returning results: " +String.valueOf(nanoTimeEnd-nanoTimeStart));
+		
+		System.exit(0);
+	}
+	
+	protected int[][] cloneField2(int[][] field){ //my attempt to make it run faster
+		return field.clone();
+	}
+	protected void cloneField_time_createVar(int[][] field){ //my attempt to make it run faster
+		int row = field.length;
+		int col = field[0].length;
+		int[][] suc_field = new int[row][col];
+		return;
+	}
+	protected int[][] cloneField_time_return(int[][] field){ //my attempt to make it run faster
+		return field;
+	}
+	
 	
 	protected int makeGreedyChoice(State s, int[][] legalMoves){
 
@@ -177,6 +225,7 @@ public class PlayerGreed implements IPlayer {
 		}	
 		return suc_field;
 	}
+	
 	
 	// Return the same field with a particular row removed and the columns collasped
 	protected int[][] removeFRow(int[][] field, int r){
