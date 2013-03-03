@@ -77,6 +77,8 @@ public class PlayerGreed implements IPlayer {
 	}
 	
 	protected int[][] cloneField2(int[][] field){ //my attempt to make it run faster
+		//Source: http://www.matthicks.com/2008/05/fastest-deep-cloning.html
+		//		 - http://javatechniques.com/blog/faster-deep-copies-of-java-objects/
 		return field.clone();
 	}
 	protected void cloneField_time_createVar(int[][] field){ //my attempt to make it run faster
