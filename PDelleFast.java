@@ -19,54 +19,64 @@ public class PDelleFast implements IPlayer {
 	//the next several arrays define the piece vocabulary in detail
 	//width of the pieces [piece ID][orientation]
 	protected final int[][] pWidth = {
-		{2},
-		{1,4},
-		{2,3,2,3},
-		{2,3,2,3},
-		{2,3,2,3},
-		{3,2},
-		{3,2}
+			{2},
+			{1,4},
+			{2,3,2,3},
+			{2,3,2,3},
+			{2,3,2,3},
+			{3,2},
+			{3,2}
 	};
 	//height of the pieces [piece ID][orientation]
 	protected final int[][] pHeight = {
-		{2},
-		{4,1},
-		{3,2,3,2},
-		{3,2,3,2},
-		{3,2,3,2},
-		{2,3},
-		{2,3}
+			{2},
+			{4,1},
+			{3,2,3,2},
+			{3,2,3,2},
+			{3,2,3,2},
+			{2,3},
+			{2,3}
 	};
 	protected final int[][][] pBottom = {
-		{{0,0}},
-		{{0},{0,0,0,0}},
-		{{0,0},{0,1,1},{2,0},{0,0,0}},
-		{{0,0},{0,0,0},{0,2},{1,1,0}},
-		{{0,1},{1,0,1},{1,0},{0,0,0}},
-		{{0,0,1},{1,0}},
-		{{1,0,0},{0,1}}
+			{{0,0}},
+			{{0},{0,0,0,0}},
+			{{0,0},{0,1,1},{2,0},{0,0,0}},
+			{{0,0},{0,0,0},{0,2},{1,1,0}},
+			{{0,1},{1,0,1},{1,0},{0,0,0}},
+			{{0,0,1},{1,0}},
+			{{1,0,0},{0,1}}
 	};
 	protected final int[][][] pTop = {
-		{{2,2}},
-		{{4},{1,1,1,1}},
-		{{3,1},{2,2,2},{3,3},{1,1,2}},
-		{{1,3},{2,1,1},{3,3},{2,2,2}},
-		{{3,2},{2,2,2},{2,3},{1,2,1}},
-		{{1,2,2},{3,2}},
-		{{2,2,1},{2,3}}
+			{{2,2}},
+			{{4},{1,1,1,1}},
+			{{3,1},{2,2,2},{3,3},{1,1,2}},
+			{{1,3},{2,1,1},{3,3},{2,2,2}},
+			{{3,2},{2,2,2},{2,3},{1,2,1}},
+			{{1,2,2},{3,2}},
+			{{2,2,1},{2,3}}
+	};
+
+	protected final double[][] pFitScore = {
+			{1.0/6.0},
+			{1.0/9.0, 1.0/6.0},
+			{1.0/6.0, 1.0/7.0, 1.0/8.0, 1.0/7.0},
+			{1.0/6.0, 1.0/7.0, 1.0/8.0, 1.0/7.0},
+			{1.0/7.0, 1.0/7.0, 1.0/7.0, 1.0/5.0},
+			{1.0/6.0, 1.0/7.0},
+			{1.0/6.0, 1.0/7.0},
 	};
 
 	protected final int ORIENT = 0;
 	protected final int SLOT = 1;	// Index of legalMoves[piece]
 
 	protected final int[][][] legalMoves = {
-		{{0,0},{0,1},{0,2},{0,3},{0,4},{0,5},{0,6},{0,7},{0,8}},
-		{{0,0},{0,1},{0,2},{0,3},{0,4},{0,5},{0,6},{0,7},{0,8},{0,9},{1,0},{1,1},{1,2},{1,3},{1,4},{1,5},{1,6}},
-		{{0,0},{0,1},{0,2},{0,3},{0,4},{0,5},{0,6},{0,7},{0,8},{1,0},{1,1},{1,2},{1,3},{1,4},{1,5},{1,6},{1,7},{2,0},{2,1},{2,2},{2,3},{2,4},{2,5},{2,6},{2,7},{2,8},{3,0},{3,1},{3,2},{3,3},{3,4},{3,5},{3,6},{3,7}},
-		{{0,0},{0,1},{0,2},{0,3},{0,4},{0,5},{0,6},{0,7},{0,8},{1,0},{1,1},{1,2},{1,3},{1,4},{1,5},{1,6},{1,7},{2,0},{2,1},{2,2},{2,3},{2,4},{2,5},{2,6},{2,7},{2,8},{3,0},{3,1},{3,2},{3,3},{3,4},{3,5},{3,6},{3,7}},
-		{{0,0},{0,1},{0,2},{0,3},{0,4},{0,5},{0,6},{0,7},{0,8},{1,0},{1,1},{1,2},{1,3},{1,4},{1,5},{1,6},{1,7},{2,0},{2,1},{2,2},{2,3},{2,4},{2,5},{2,6},{2,7},{2,8},{3,0},{3,1},{3,2},{3,3},{3,4},{3,5},{3,6},{3,7}},
-		{{0,0},{0,1},{0,2},{0,3},{0,4},{0,5},{0,6},{0,7},{1,0},{1,1},{1,2},{1,3},{1,4},{1,5},{1,6},{1,7},{1,8}},
-		{{0,0},{0,1},{0,2},{0,3},{0,4},{0,5},{0,6},{0,7},{1,0},{1,1},{1,2},{1,3},{1,4},{1,5},{1,6},{1,7},{1,8}},
+			{{0,0},{0,1},{0,2},{0,3},{0,4},{0,5},{0,6},{0,7},{0,8}},
+			{{0,0},{0,1},{0,2},{0,3},{0,4},{0,5},{0,6},{0,7},{0,8},{0,9},{1,0},{1,1},{1,2},{1,3},{1,4},{1,5},{1,6}},
+			{{0,0},{0,1},{0,2},{0,3},{0,4},{0,5},{0,6},{0,7},{0,8},{1,0},{1,1},{1,2},{1,3},{1,4},{1,5},{1,6},{1,7},{2,0},{2,1},{2,2},{2,3},{2,4},{2,5},{2,6},{2,7},{2,8},{3,0},{3,1},{3,2},{3,3},{3,4},{3,5},{3,6},{3,7}},
+			{{0,0},{0,1},{0,2},{0,3},{0,4},{0,5},{0,6},{0,7},{0,8},{1,0},{1,1},{1,2},{1,3},{1,4},{1,5},{1,6},{1,7},{2,0},{2,1},{2,2},{2,3},{2,4},{2,5},{2,6},{2,7},{2,8},{3,0},{3,1},{3,2},{3,3},{3,4},{3,5},{3,6},{3,7}},
+			{{0,0},{0,1},{0,2},{0,3},{0,4},{0,5},{0,6},{0,7},{0,8},{1,0},{1,1},{1,2},{1,3},{1,4},{1,5},{1,6},{1,7},{2,0},{2,1},{2,2},{2,3},{2,4},{2,5},{2,6},{2,7},{2,8},{3,0},{3,1},{3,2},{3,3},{3,4},{3,5},{3,6},{3,7}},
+			{{0,0},{0,1},{0,2},{0,3},{0,4},{0,5},{0,6},{0,7},{1,0},{1,1},{1,2},{1,3},{1,4},{1,5},{1,6},{1,7},{1,8}},
+			{{0,0},{0,1},{0,2},{0,3},{0,4},{0,5},{0,6},{0,7},{1,0},{1,1},{1,2},{1,3},{1,4},{1,5},{1,6},{1,7},{1,8}},
 	};
 
 	protected int[][] sucField1 = {
@@ -117,13 +127,15 @@ public class PDelleFast implements IPlayer {
 	protected int insert_height;
 
 	// Initial coefficient of the weights in the combined heuristic score
-	protected double cof_h = -1, cof_r = 1, cof_row = -1, cof_col = -1, cof_g = -5, cof_w = -1;
+	// They are all positive, the sign changing only occurs when adding up the scores
+	protected double cof_h = 1, cof_r = 1, cof_row = 1, cof_col = 1, cof_g = 5, cof_w = 1, cof_fit = 1;
 	protected int score_h = 0;
 	protected int score_r = 0;
 	protected int score_row = 0;
 	protected int score_col = 0;
 	protected int score_g = 0;
 	protected int score_w = 0;
+	protected int score_fit = 0;
 
 	protected boolean sucField1GG = false;
 
@@ -136,14 +148,11 @@ public class PDelleFast implements IPlayer {
 		cof_row = vector[2];
 		cof_col = vector[3];
 		cof_g = vector[4];
-		cof_w = vector[5];
+		cof_fit = vector[6];
 	}
 
 	@Override
 	public int pickMove(State s, int[][] l) {
-		//		int[][] newf = s.getField();
-		//		System.out.println("newf: "+newf.length+"x"+newf[0].length);
-		//		System.out.println("field: "+field.length+"x"+field[0].length);
 		cloneField(s.getField(),field);
 		fTop = s.getTop();
 		curPiece = s.getNextPiece();
@@ -153,7 +162,7 @@ public class PDelleFast implements IPlayer {
 		for(move = 0; move < legalMoves[curPiece].length; move++){
 			//			System.out.println("MOVE "+ move);
 			cloneField(field, sucField1);
-			// score_h is updated in the successorField function
+			// score_fit is computed in the successorField call
 			successorField(legalMoves[curPiece][move], curPiece, turn, fTop, sucField1);
 			score_h = insert_height;
 
@@ -163,15 +172,15 @@ public class PDelleFast implements IPlayer {
 			computeScoreSucField1();
 
 			if(!sucField1GG){
-				//				System.out.println("We're not going to die");
 				// Compute the total score and check against scoreCurrentMove
 				double score = 0;
-				score += cof_h * score_h;
+				score -= cof_h * score_h;
 				score += cof_r * score_r;
-				score += cof_row * score_row;
-				score += cof_col * score_col;
-				score += cof_g * score_g;
-				score += cof_w * score_w;
+				score -= cof_row * score_row;
+				score -= cof_col * score_col;
+				score -= cof_g * score_g;
+				score -= cof_w * score_w;
+				score += cof_fit * score_fit;
 
 				//				printField(sucField1);
 				//				System.out.println("Score_h : "+score_h);
@@ -180,15 +189,12 @@ public class PDelleFast implements IPlayer {
 				//				System.out.println("Score_col : "+score_col);
 				//				System.out.println("Score_g : "+score_g);
 				//				System.out.println("Score_w : "+score_w);
+				//				System.out.println("Score fit : "+score_fit);
 				if(score > scoreCurrentMove){
 					scoreCurrentMove = score;
 					choiceCurrentMove = move;
-					//					System.out.println("Choice: "+choiceCurrentMove);
 				}
 			} 
-			else{
-				//				System.out.println("DIE");
-			}
 		}
 
 		turn++;
@@ -203,8 +209,6 @@ public class PDelleFast implements IPlayer {
 		for(int row = 0; row < ROWS; row++){
 			complete = true;
 			if(gap > 0){
-				//				System.out.println("Row: "+row+" , gap: "+gap);
-				//				printField(sucField1);
 				System.arraycopy(sucField1[row],0,sucField1[row-gap],0,COLS);
 			}
 
@@ -303,8 +307,10 @@ public class PDelleFast implements IPlayer {
 		moveOrient = move[ORIENT];
 		moveSlot = move[SLOT];
 
-		// Determine baseline or insert height
+		score_fit = 0;
 		insert_height = 0;
+
+		// Determine baseline or insert height
 		for(int c = 0; c < pWidth[piece][moveOrient]; c++){
 			insert_height = Math.max(insert_height, fTop[moveSlot+c] - pBottom[piece][moveOrient][c]);
 		}
@@ -312,8 +318,40 @@ public class PDelleFast implements IPlayer {
 		// Insert the piece
 		for(int i = 0; i < pWidth[piece][moveOrient]; i++){
 			for(int j = insert_height + pBottom[piece][moveOrient][i]; j < Math.min(insert_height+pTop[piece][moveOrient][i], ROWS); j++){
-				//				sucField[j][slot+i] = turn;
 				sucField[j][moveSlot+i] = 1;
+
+				// Check bottom touching
+				if(j == insert_height + pBottom[piece][moveOrient][i]){
+					if(j > 0){
+						if(sucField[j-1][moveSlot+i] > 0){
+							score_fit += pFitScore[piece][moveOrient];
+						}
+					} else {
+						score_fit += pFitScore[piece][moveOrient];
+					}
+				}
+
+				// Check left touching
+				if(i == 0){
+					if(moveSlot+i > 0){
+						if(sucField[j][moveSlot+i-1] > 0){
+							score_fit += pFitScore[piece][moveOrient];
+						}
+					} else {
+						score_fit += pFitScore[piece][moveOrient];
+					}
+				}
+
+				// Check right touching
+				if(i == pWidth[piece][moveOrient] - 1){
+					if(moveSlot+i < COLS - 1){
+						if(sucField[j][moveSlot+i+1] > 0){
+							score_fit += pFitScore[piece][moveOrient];
+						}
+					} else {
+						score_fit += pFitScore[piece][moveOrient];
+					}
+				}
 			}
 		}
 	}
@@ -338,7 +376,7 @@ public class PDelleFast implements IPlayer {
 		return new_top;
 	}
 
-	public void main(String args[]){
+	public static void main(String args[]){
 		//		int[][] orig = new int[10][10];
 		//
 		//		for(int i = 0; i < 10; i++){
@@ -370,18 +408,15 @@ public class PDelleFast implements IPlayer {
 		State s = new State();
 		new TFrame(s);
 		PDelleFast p = new PDelleFast();
-		//		long last_time = System.currentTimeMillis();
 		while(!s.hasLost()) {
 			s.makeMove(p.pickMove(s,s.legalMoves()));
-			//			if((System.currentTimeMillis() - last_time) > 10000){
-			//				last_time = System.currentTimeMillis();
-			//						s.draw();
-			//						s.drawNext(0,0);
-			//						try {
-			//							Thread.sleep(1);
-			//						} catch (InterruptedException e) {
-			//							e.printStackTrace();
-			//						}	
+//			s.draw();
+//			s.drawNext(0,0);
+//			try {
+//				Thread.sleep(1);
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			}	
 		}
 		s.draw();
 		s.drawNext(0,0);
@@ -412,4 +447,4 @@ public class PDelleFast implements IPlayer {
 		System.out.println("}");
 	}
 
-	}
+}
