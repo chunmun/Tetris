@@ -27,7 +27,8 @@ public class Arena {
 //		players.add(new PlayerGLessGMake(2));
 //		players.add(new PlayerGMixedRankGHF());
 		players.add(new PlayerGPDelleCherie());
-		players.add(new PlayerGPDCForward());
+//		players.add(new PDelleFast());
+//		players.add(new PlayerGPDCForward());
 		
 
 		// 2. Choose a generator - RANDOM, FIXED, FUNC
@@ -35,7 +36,7 @@ public class Arena {
 
 		// 3. Let it rip with the number of runs
 		Arena Rumble = new Arena(players,sg);
-		Rumble.run(1);
+		Rumble.run(10);
 	}
 
 	public Arena(Vector<IPlayer> players, StateGenerator sg){

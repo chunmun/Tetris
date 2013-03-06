@@ -42,7 +42,7 @@ public class PlayerGPDelleCherie extends PlayerGreed implements IPlayer{
 
 	@Override
 	public int makeGreedyChoice(State s, int[][] legalMoves){
-		if(s.getRowsCleared() >= 100000){
+		if(s.getRowsCleared() >= 10000){
 			// This is only used in the test to prevent it from running forever
 			return 0;
 		}
