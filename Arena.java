@@ -26,8 +26,9 @@ public class Arena {
 //		players.add(new PlayerGreedLessGapF(2));
 //		players.add(new PlayerGLessGMake(2));
 //		players.add(new PlayerGMixedRankGHF());
-		players.add(new PlayerGPDelleCherie());
-//		players.add(new PDelleFast());
+//		players.add(new PlayerGPDelleCherie());
+//		players.add(new PDelleFast(new double[] {0.6669962749252368, 2.2483426798020165, 0.6669962749252368, 1.96398583652387, 1.3131737271348578, 1.3380444849503885, 2.2483426798020165}));
+		players.add(new PDelleFast(new double[] {-1,1,-1,-1,-6,-2,0}));
 //		players.add(new PlayerGPDCForward());
 		
 

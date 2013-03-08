@@ -166,7 +166,6 @@ public class State {
 	//constructor
 	public State() {
 		nextPiece = randomPiece();
-
 	}
 	
 	//random integer, returns 0-6
@@ -308,7 +307,7 @@ public class State {
 		label.rectangleLL(c, r, 1, 1);
 	}
 	
-	public void drawNext(int slot, int orient) {
+	public void drawNext(int orient, int slot) {
 		for(int i = 0; i < pWidth[nextPiece][orient]; i++) {
 			for(int j = pBottom[nextPiece][orient][i]; j <pTop[nextPiece][orient][i]; j++) {
 				drawBrick(i+slot, j+ROWS+1);

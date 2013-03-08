@@ -1,8 +1,8 @@
 package blueBlox;
 
-import net.sourceforge.jswarm_pso.FitnessFunction;
-import net.sourceforge.jswarm_pso.Particle;
-import net.sourceforge.jswarm_pso.Swarm;
+import java.util.Arrays;
+import java.util.Random;
+import java.util.Vector;
 
 /**
  * @author chunmun
@@ -128,7 +128,7 @@ public class PDelleFast implements IPlayer {
 
 	// Initial coefficient of the weights in the combined heuristic score
 	// They are all positive, the sign changing only occurs when adding up the scores
-	protected double cof_h = 1, cof_r = 1, cof_row = 1, cof_col = 1, cof_g = 5, cof_w = 1, cof_fit = 1;
+	protected double cof_h = -1, cof_r = 1, cof_row = -1, cof_col = -1, cof_g = -6, cof_w = -2, cof_fit = 1;
 	protected int score_h = 0;
 	protected int score_r = 0;
 	protected int score_row = 0;
@@ -139,6 +139,9 @@ public class PDelleFast implements IPlayer {
 
 	protected boolean sucField1GG = false;
 
+//	protected Vector<String> last_choice = new Vector<String>();
+//	protected Vector<String> last_g = new Vector<String>();
+
 	public PDelleFast(){
 	}
 
@@ -148,49 +151,92 @@ public class PDelleFast implements IPlayer {
 		cof_row = vector[2];
 		cof_col = vector[3];
 		cof_g = vector[4];
+		cof_w = vector[5];
 		cof_fit = vector[6];
 	}
 
+//	public void printLastChoice(){
+//		for(String line : last_choice){
+//			System.out.println(line);
+//		}
+//		System.out.println("coeffients, cof_h:"+cof_h+",cof_r:"+cof_r+",cof_row:"+cof_row+",cof_col:"+cof_col+",cof_g:"+cof_g+",cof_w:"+cof_w);
+//	}
+
+//	public void printLastG(){
+//		for(String line : last_g){
+//			System.out.println(line);
+//		}
+//	}
 	@Override
 	public int pickMove(State s, int[][] l) {
+//		last_choice.clear();
+//		last_g.clear();
+		if(s.getRowsCleared() > 10000000){
+			return 0;
+		}
 		cloneField(s.getField(),field);
 		fTop = s.getTop();
 		curPiece = s.getNextPiece();
 
 		choiceCurrentMove = 0;
 		scoreCurrentMove = -999999999;
+//		last_g.add("==== Top before anything : " + Arrays.toString(generateFTop(field)));
 		for(move = 0; move < legalMoves[curPiece].length; move++){
 			//			System.out.println("MOVE "+ move);
 			cloneField(field, sucField1);
 			// score_fit is computed in the successorField call
-			successorField(legalMoves[curPiece][move], curPiece, turn, fTop, sucField1);
-			score_h = insert_height;
+			successorField(legalMoves[curPiece][move], curPiece, turn, sucField1);
+			suc1Top = generateFTop(sucField1);
+////			last_g.add("The top by this move before collapse: "+Arrays.toString(generateFTop(sucField1)));
+//			for(int[] row : sucField1){
+//				last_g.add(Arrays.toString(row));
+//			}
+			score_h = findInsertHeight(legalMoves[curPiece][move], curPiece);
 
 			// score_r is updated in the collapseField function
 			collapseSucField1();
 			suc1Top = generateFTop(sucField1);
-			computeScoreSucField1();
+//			last_g.add("The top by this move after collapse: "+Arrays.toString(generateFTop(sucField1)));
+//			for(int[] row : sucField1){
+//				last_g.add(Arrays.toString(row));
+//			}
+			computeScoreSucField1(move);
 
 			if(!sucField1GG){
 				// Compute the total score and check against scoreCurrentMove
 				double score = 0;
-				score -= cof_h * score_h;
+				score += cof_h * score_h;
 				score += cof_r * score_r;
-				score -= cof_row * score_row;
-				score -= cof_col * score_col;
-				score -= cof_g * score_g;
-				score -= cof_w * score_w;
-				score += cof_fit * score_fit;
+				score += cof_row * score_row;
+				score += cof_col * score_col;
+				score += cof_g * score_g;
+				score += cof_w * score_w;
+				//				score += cof_fit * score_fit;
 
 				//				printField(sucField1);
+				//				System.out.println("Move: "+Arrays.toString(legalMoves[curPiece][move]));
 				//				System.out.println("Score_h : "+score_h);
 				//				System.out.println("Score_r : "+score_r);
 				//				System.out.println("Score_row : "+score_row);
 				//				System.out.println("Score_col : "+score_col);
 				//				System.out.println("Score_g : "+score_g);
 				//				System.out.println("Score_w : "+score_w);
+				//
+				//				try{
+				//
+				//					FileWriter f = new FileWriter(new File("DFoutput.txt"), true);
+				//					f.write("move:"+Arrays.toString(legalMoves[curPiece][move])+"["+score_h+","+score_r+","+score_row+","+score_col+","+score_g+","+score_w+"]"+System.getProperty("line.separator"));
+				//					f.close();
+				//
+				//				}catch(IOException e){
+				//
+				//				}
+
+//				last_choice.add("move:"+Arrays.toString(legalMoves[curPiece][move])+"["+score_h+","+score_r+","+score_row+","+score_col+","+score_g+","+score_w+"] => "+score);
 				//				System.out.println("Score fit : "+score_fit);
 				if(score > scoreCurrentMove){
+					//					System.out.println("Switching Choice =============== " + scoreCurrentMove +"=>"+score);
+//					last_choice.add("Switching Choice ========= " + scoreCurrentMove +" => "+score);
 					scoreCurrentMove = score;
 					choiceCurrentMove = move;
 				}
@@ -201,6 +247,7 @@ public class PDelleFast implements IPlayer {
 		return choiceCurrentMove;
 	}
 
+	protected int[] zeroRow = {0,0,0,0,0,0,0,0,0,0};
 	protected void collapseSucField1(){
 		boolean complete = true;
 		int gap = 0;
@@ -208,9 +255,7 @@ public class PDelleFast implements IPlayer {
 
 		for(int row = 0; row < ROWS; row++){
 			complete = true;
-			if(gap > 0){
-				System.arraycopy(sucField1[row],0,sucField1[row-gap],0,COLS);
-			}
+
 
 			for(int col = 0; col < COLS; col++){
 				if(sucField1[row][col] == 0){
@@ -222,6 +267,12 @@ public class PDelleFast implements IPlayer {
 			if(complete){
 				score_r++;
 				gap++;
+				System.arraycopy(zeroRow,0,sucField1[row],0,COLS);
+			} else {
+				if(gap > 0){
+					System.arraycopy(sucField1[row],0,sucField1[row-gap],0,COLS);
+					System.arraycopy(zeroRow,0,sucField1[row],0,COLS);
+				}			
 			}
 		}
 	}
@@ -229,7 +280,7 @@ public class PDelleFast implements IPlayer {
 	protected final int[] rowTransOrig = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
 	protected int[] rowTrans = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
 
-	protected void computeScoreSucField1(){
+	protected void computeScoreSucField1(int move){
 		boolean isTop = false;
 		score_col = 0;
 		score_row = 0;
@@ -237,20 +288,15 @@ public class PDelleFast implements IPlayer {
 		score_w = 0;
 		sucField1GG = false;
 
-		System.arraycopy(rowTransOrig,0,rowTrans,0,COLS);
+		System.arraycopy(rowTransOrig,0,rowTrans,0,ROWS);
 
 		for(int col = 0; col < COLS; col++){
 			isTop = false;
 
 			for(int row = ROWS - 1; row >= 0; row--){
 
-				if(!isTop && sucField1[row][col] > 0){
-					isTop = true;
-					suc1Top[col] = row;
-				}
-
 				// Row Transition
-				if((sucField1[row][col] == 0 && rowTrans[row] != 0) || (sucField1[row][col] != 0 && rowTrans[row] == 0)){
+				if((sucField1[row][col] == 0 && rowTrans[row] > 0) || (sucField1[row][col] > 0 && rowTrans[row] == 0)){
 					score_row++;
 					rowTrans[row] = sucField1[row][col];
 
@@ -282,6 +328,7 @@ public class PDelleFast implements IPlayer {
 				// Gaps 
 				if(row < suc1Top[col] && sucField1[row][col] == 0){
 					score_g++;
+//					last_g.add("move : "+Arrays.toString(legalMoves[curPiece][move])+" Adding "+score_g+" @ row : "+row+", col : "+col+" and the top is represented by "+Arrays.toString(suc1Top));
 				}
 			}
 		}
@@ -298,17 +345,19 @@ public class PDelleFast implements IPlayer {
 			}
 
 			int low = Math.min(leftTop, rightTop);
-			score_w += Math.max(0, low - suc1Top[j] + 1);
+			score_w += Math.max(0, low - suc1Top[j]);
 		}
+		//		System.out.println("Top : "+Arrays.toString(suc1Top));
 	}
 
 
-	protected void successorField(int[] move, int piece, int turn, int[] fTop, int[][] sucField){
+	protected void successorField(int[] move, int piece, int turn, int[][] sucField){
 		moveOrient = move[ORIENT];
 		moveSlot = move[SLOT];
 
 		score_fit = 0;
 		insert_height = 0;
+		score_h = 0;
 
 		// Determine baseline or insert height
 		for(int c = 0; c < pWidth[piece][moveOrient]; c++){
@@ -330,6 +379,7 @@ public class PDelleFast implements IPlayer {
 						score_fit += pFitScore[piece][moveOrient];
 					}
 				}
+				score_h = Math.max(score_h, j);
 
 				// Check left touching
 				if(i == 0){
@@ -376,47 +426,34 @@ public class PDelleFast implements IPlayer {
 		return new_top;
 	}
 
-	public static void main(String args[]){
-		//		int[][] orig = new int[10][10];
-		//
-		//		for(int i = 0; i < 10; i++){
-		//			for(int j = 0; j < 10; j++){
-		//				orig[i][j] = -1;
-		////				copied[i][j] = 0;
-		//			}
-		//		}
-		//
-		//		int[][] cloned = new int[10][10];
-		//		long start = System.nanoTime();
-		//		for(int i = 0; i < 10; i++){
-		//			cloned[i] = orig[i].clone();
-		//		}
-		//		long time1 = System.nanoTime() - start;
-		//
-		//		start = System.nanoTime();
-		//		int[][] copied = new int[10][10];
-		//		for(int i = 0; i < 10; i++){
-		//			System.arraycopy(orig[i], 0, copied[i], 0, orig[i].length);
-		//		}
-		//		long time2 = System.nanoTime() - start;
-		//		orig[9][1] = 2;
-		//		System.out.println(Arrays.toString(copied[9]));
-		//
-		//		System.out.println("time1 "+time1);
-		//		System.out.println("time2 "+time2);
+	// Returns the index of the inserted height on the field given this move
+	protected int findInsertHeight(int[] move, int piece){
+		int orient = move[ORIENT];
+		int slot = move[SLOT];
 
+		int height = 0;
+		for(int c = 0; c < pWidth[piece][orient]; c++){
+			height = Math.max(height, suc1Top[slot+c] - pBottom[piece][orient][c]);
+		}
+
+		return height;
+	}	
+
+	public static void main(String args[]){
 		State s = new State();
 		new TFrame(s);
-		PDelleFast p = new PDelleFast();
+		PDelleFast p = new PDelleFast(new double[] {-1,1,-1,-1,-6,-2,0});
+		Random r = new Random(1);
 		while(!s.hasLost()) {
+			s.setNextPiece(Math.abs(r.nextInt())%7);
 			s.makeMove(p.pickMove(s,s.legalMoves()));
-//			s.draw();
-//			s.drawNext(0,0);
-//			try {
-//				Thread.sleep(1);
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			}	
+			s.draw();
+			s.drawNext(0,0);
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}	
 		}
 		s.draw();
 		s.drawNext(0,0);
