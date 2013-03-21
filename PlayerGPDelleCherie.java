@@ -1,8 +1,8 @@
 package blueBlox;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Random;
 import java.util.Vector;
 
 /**
@@ -123,9 +123,9 @@ public class PlayerGPDelleCherie implements IPlayer{
 		this.cof_g = cofs[4];
 		this.cof_w = cofs[5];
 	}
-	
+
 	protected Vector<String> last_choice = new Vector<String>();
-	
+
 	public void printLastChoice(){
 		for(String line : last_choice){
 			System.out.println(line);
@@ -173,19 +173,19 @@ public class PlayerGPDelleCherie implements IPlayer{
 
 
 			// Compute a weighted sum
-//			System.out.println("Move: "+Arrays.toString(legalMoves[i]));
-//			System.out.println("Score_h : "+h_value);
-//			System.out.println("Score_r : "+r_value);
-//			System.out.println("Score_row : "+row_value);
-//			System.out.println("Score_col : "+col_value);
-//			System.out.println("Score_g : "+g_value);
-//			System.out.println("Score_w : "+w_value);
-//			FileWriter f = new FileWriter(new File("DCoutput.txt"), true);
-//			f.write("move:"+Arrays.toString(legalMoves[i])+"["+h_value+","+r_value+","+row_value+","+col_value+","+g_value+","+w_value+"]"+System.getProperty("line.separator"));
-//			f.close();
-//			System.out.println("Score fit : "+score_fit);
-			
-			
+			//			System.out.println("Move: "+Arrays.toString(legalMoves[i]));
+			//			System.out.println("Score_h : "+h_value);
+			//			System.out.println("Score_r : "+r_value);
+			//			System.out.println("Score_row : "+row_value);
+			//			System.out.println("Score_col : "+col_value);
+			//			System.out.println("Score_g : "+g_value);
+			//			System.out.println("Score_w : "+w_value);
+			//			FileWriter f = new FileWriter(new File("DCoutput.txt"), true);
+			//			f.write("move:"+Arrays.toString(legalMoves[i])+"["+h_value+","+r_value+","+row_value+","+col_value+","+g_value+","+w_value+"]"+System.getProperty("line.separator"));
+			//			f.close();
+			//			System.out.println("Score fit : "+score_fit);
+
+
 			int score = 0;
 			score += cof_h * h_value;
 			score += cof_r * r_value;
@@ -200,8 +200,8 @@ public class PlayerGPDelleCherie implements IPlayer{
 			last_choice.add("move:"+Arrays.toString(legalMoves[i])+"["+h_value+","+r_value+","+row_value+","+col_value+","+g_value+","+w_value+"] => "+score);
 
 			if(score > score0){
-//					System.out.println("Switching Choice =============== " + score0 +"=>"+score);
-					last_choice.add("Switching Choice ========= " + score0 +" => "+score);
+				//					System.out.println("Switching Choice =============== " + score0 +"=>"+score);
+				last_choice.add("Switching Choice ========= " + score0 +" => "+score);
 				score0 = score;
 				choice = i;
 			}
@@ -214,28 +214,60 @@ public class PlayerGPDelleCherie implements IPlayer{
 
 	public static void main(String args[]){
 
-		State s = new State();
-		new TFrame(s);
-		PlayerGPDelleCherie p = new PlayerGPDelleCherie();
+		//		State s = new State();
+		//		new TFrame(s);
+		//		PlayerGPDelleCherie p = new PlayerGPDelleCherie();
 		//		long last_time = System.currentTimeMillis();
-		Random r = new Random(1);
-		while(!s.hasLost()) {
-			s.setNextPiece(Math.abs(r.nextInt())%7);
-			s.makeMove(p.pickMove(s,s.legalMoves()));
-			//			if((System.currentTimeMillis() - last_time) > 10000){
-			//				last_time = System.currentTimeMillis();
-			s.draw();
-			s.drawNext(0,0);
-			try {
-				Thread.sleep(1);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}	
-			//			}
+		//		Random r = new Random();
+		//		while(!s.hasLost()) {
+		//			s.setNextPiece(Math.abs(r.nextInt())%7);
+		//			s.makeMove(p.pickMove(s,s.legalMoves()));
+		//			if((System.currentTimeMillis() - last_time) > 10000){
+		//				last_time = System.currentTimeMillis();
+		//			s.draw();
+		//			s.drawNext(0,0);
+		//			try {
+		//				Thread.sleep(1);
+		//			} catch (InterruptedException e) {
+		//				e.printStackTrace();
+		//			}	
+		//			}
+		//	}
+		//		s.draw();
+		//		s.drawNext(0,0);
+		//		System.out.println("You have completed "+s.getRowsCleared()+" rows.");
+
+		
+		// ================= Testing code ====================
+		
+		int numRuns = 1;
+		ArrayList<Integer> total = new ArrayList<Integer>();
+		long sum = 0;
+		for(int i = 0; i < numRuns; i++){
+			State s = new State();
+			PlayerGPDelleCherie p = new PlayerGPDelleCherie();
+			
+			System.out.println(">>> Start Run "+i);
+			while(!s.hasLost()){
+				s.makeMove(p.pickMove(s, s.legalMoves()));
+			}
+			System.out.println("<<< Finish Run "+i);
+			
+			total.add(s.getRowsCleared());
+			sum += s.getRowsCleared();
 		}
-		s.draw();
-//		s.drawNext(0,0);
-		System.out.println("You have completed "+s.getRowsCleared()+" rows.");
+		
+		double avg = (double)sum / (double)numRuns;
+		double sq_total = 0;
+		
+		for(int i : total) {
+			sq_total += Math.pow(i-avg, 2);
+		}
+		
+		double var = sq_total / (double)numRuns;
+		System.out.println("Mean : "+avg);
+		System.out.println("Variance: "+var);
+		System.out.println(total.toString());
 	}	
 
 

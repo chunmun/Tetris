@@ -1,5 +1,6 @@
 package blueBlox;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.Vector;
@@ -128,7 +129,8 @@ public class PDelleFast implements IPlayer {
 
 	// Initial coefficient of the weights in the combined heuristic score
 	// They are all positive, the sign changing only occurs when adding up the scores
-	protected double cof_h = -1, cof_r = 1, cof_row = -1, cof_col = -1, cof_g = -6, cof_w = -2, cof_fit = 1;
+	protected double cof_h = -1, cof_r = 1, cof_row = -1, cof_col = -1, cof_g = -6, cof_w = -2, cof_fit = 0;
+	//	protected double cof_h = -4.500158825082766, cof_r = 3.4181268101392694, cof_row = -3.2178882868487753, cof_col = -9.348695305445199, cof_g = -7.899265427351652, cof_w = -3.3855972247263626, cof_fit = 0;
 	protected int score_h = 0;
 	protected int score_r = 0;
 	protected int score_row = 0;
@@ -139,8 +141,8 @@ public class PDelleFast implements IPlayer {
 
 	protected boolean sucField1GG = false;
 
-//	protected Vector<String> last_choice = new Vector<String>();
-//	protected Vector<String> last_g = new Vector<String>();
+	protected Vector<String> last_choice = new Vector<String>();
+	protected Vector<String> last_g = new Vector<String>();
 
 	public PDelleFast(){
 	}
@@ -155,22 +157,22 @@ public class PDelleFast implements IPlayer {
 		cof_fit = vector[6];
 	}
 
-//	public void printLastChoice(){
-//		for(String line : last_choice){
-//			System.out.println(line);
-//		}
-//		System.out.println("coeffients, cof_h:"+cof_h+",cof_r:"+cof_r+",cof_row:"+cof_row+",cof_col:"+cof_col+",cof_g:"+cof_g+",cof_w:"+cof_w);
-//	}
+	public void printLastChoice(){
+		for(String line : last_choice){
+			System.out.println(line);
+		}
+		System.out.println("coeffients, cof_h:"+cof_h+",cof_r:"+cof_r+",cof_row:"+cof_row+",cof_col:"+cof_col+",cof_g:"+cof_g+",cof_w:"+cof_w);
+	}
 
-//	public void printLastG(){
-//		for(String line : last_g){
-//			System.out.println(line);
-//		}
-//	}
+	public void printLastG(){
+		for(String line : last_g){
+			System.out.println(line);
+		}
+	}
 	@Override
 	public int pickMove(State s, int[][] l) {
-//		last_choice.clear();
-//		last_g.clear();
+		//		last_choice.clear();
+		//		last_g.clear();
 		if(s.getRowsCleared() > 10000000){
 			return 0;
 		}
@@ -180,26 +182,26 @@ public class PDelleFast implements IPlayer {
 
 		choiceCurrentMove = 0;
 		scoreCurrentMove = -999999999;
-//		last_g.add("==== Top before anything : " + Arrays.toString(generateFTop(field)));
+		//		last_g.add("==== Top before anything : " + Arrays.toString(generateFTop(field)));
 		for(move = 0; move < legalMoves[curPiece].length; move++){
 			//			System.out.println("MOVE "+ move);
 			cloneField(field, sucField1);
 			// score_fit is computed in the successorField call
 			successorField(legalMoves[curPiece][move], curPiece, turn, sucField1);
 			suc1Top = generateFTop(sucField1);
-////			last_g.add("The top by this move before collapse: "+Arrays.toString(generateFTop(sucField1)));
-//			for(int[] row : sucField1){
-//				last_g.add(Arrays.toString(row));
-//			}
+			////			last_g.add("The top by this move before collapse: "+Arrays.toString(generateFTop(sucField1)));
+			//			for(int[] row : sucField1){
+			//				last_g.add(Arrays.toString(row));
+			//			}
 			score_h = findInsertHeight(legalMoves[curPiece][move], curPiece);
 
 			// score_r is updated in the collapseField function
 			collapseSucField1();
 			suc1Top = generateFTop(sucField1);
-//			last_g.add("The top by this move after collapse: "+Arrays.toString(generateFTop(sucField1)));
-//			for(int[] row : sucField1){
-//				last_g.add(Arrays.toString(row));
-//			}
+			//			last_g.add("The top by this move after collapse: "+Arrays.toString(generateFTop(sucField1)));
+			//			for(int[] row : sucField1){
+			//				last_g.add(Arrays.toString(row));
+			//			}
 			computeScoreSucField1(move);
 
 			if(!sucField1GG){
@@ -211,7 +213,7 @@ public class PDelleFast implements IPlayer {
 				score += cof_col * score_col;
 				score += cof_g * score_g;
 				score += cof_w * score_w;
-				//				score += cof_fit * score_fit;
+				score += cof_fit * score_fit;
 
 				//				printField(sucField1);
 				//				System.out.println("Move: "+Arrays.toString(legalMoves[curPiece][move]));
@@ -232,11 +234,11 @@ public class PDelleFast implements IPlayer {
 				//
 				//				}
 
-//				last_choice.add("move:"+Arrays.toString(legalMoves[curPiece][move])+"["+score_h+","+score_r+","+score_row+","+score_col+","+score_g+","+score_w+"] => "+score);
+				//				last_choice.add("move:"+Arrays.toString(legalMoves[curPiece][move])+"["+score_h+","+score_r+","+score_row+","+score_col+","+score_g+","+score_w+"] => "+score);
 				//				System.out.println("Score fit : "+score_fit);
 				if(score > scoreCurrentMove){
 					//					System.out.println("Switching Choice =============== " + scoreCurrentMove +"=>"+score);
-//					last_choice.add("Switching Choice ========= " + scoreCurrentMove +" => "+score);
+					//					last_choice.add("Switching Choice ========= " + scoreCurrentMove +" => "+score);
 					scoreCurrentMove = score;
 					choiceCurrentMove = move;
 				}
@@ -328,7 +330,7 @@ public class PDelleFast implements IPlayer {
 				// Gaps 
 				if(row < suc1Top[col] && sucField1[row][col] == 0){
 					score_g++;
-//					last_g.add("move : "+Arrays.toString(legalMoves[curPiece][move])+" Adding "+score_g+" @ row : "+row+", col : "+col+" and the top is represented by "+Arrays.toString(suc1Top));
+					//					last_g.add("move : "+Arrays.toString(legalMoves[curPiece][move])+" Adding "+score_g+" @ row : "+row+", col : "+col+" and the top is represented by "+Arrays.toString(suc1Top));
 				}
 			}
 		}
@@ -440,24 +442,62 @@ public class PDelleFast implements IPlayer {
 	}	
 
 	public static void main(String args[]){
-		State s = new State();
-		new TFrame(s);
-		PDelleFast p = new PDelleFast(new double[] {-1,1,-1,-1,-6,-2,0});
-		Random r = new Random(1);
-		while(!s.hasLost()) {
-			s.setNextPiece(Math.abs(r.nextInt())%7);
-			s.makeMove(p.pickMove(s,s.legalMoves()));
-			s.draw();
-			s.drawNext(0,0);
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}	
+		//		State s = new State();
+		//		new TFrame(s);
+		////		PDelleFast p = new PDelleFast(new double[] {-1,1,-1,-1,-6,-2,0});
+		//		PDelleFast p = new PDelleFast();
+		//		Random r = new Random(1);
+		//		while(!s.hasLost()) {
+		//			s.setNextPiece(Math.abs(r.nextInt())%7);
+		//			s.makeMove(p.pickMove(s,s.legalMoves()));
+		////			s.draw();
+		////			s.drawNext(0,0);
+		////			try {
+		////				Thread.sleep(1);
+		////			} catch (InterruptedException e) {
+		////				e.printStackTrace();
+		////			}	
+		//		}
+		//		s.draw();
+		//		s.drawNext(0,0);
+		//		System.out.println("You have completed "+s.getRowsCleared()+" rows.");
+		int numRuns = 100;
+		ArrayList<Integer> total = new ArrayList<Integer>();
+//		long sum = 0;
+		for(int k = 0; k <= 10; k++) {
+			total.clear();
+			
+//			System.out.println(">>> Start Run "+k);
+			for(int i = 0; i < numRuns; i++){
+				State s = new State();
+				PDelleFast p = new PDelleFast(new double[] {-1,1,-1,-k,-1,-1,1});
+
+				while(!s.hasLost()){
+					s.makeMove(p.pickMove(s, s.legalMoves()));
+				}
+
+				total.add(s.getRowsCleared());
+//				sum += s.getRowsCleared();
+
+			}
+//
+//			double avg = (double)sum / (double)numRuns;
+//			double sq_total = 0;
+//
+//			for(int j : total) {
+//				sq_total += Math.pow(j-avg, 2);
+//			}
+//
+//			double var = sq_total / (double)numRuns;
+//			System.out.println("Mean : "+avg);
+//			System.out.println("Variance: "+var);
+			String res = total.toString();
+			System.out.println(res.substring(1,res.length()-1));
+//			System.out.println("<<< Finish Run "+k);
 		}
-		s.draw();
-		s.drawNext(0,0);
-		System.out.println("You have completed "+s.getRowsCleared()+" rows.");
+		System.out.println("DONE");
+
+
 	}
 
 	public double runTest(){
