@@ -148,13 +148,13 @@ public class PDelleFast implements IPlayer {
 	}
 
 	public PDelleFast(double vector[]){
-		cof_h = vector[0];
-		cof_r = vector[1];
-		cof_row = vector[2];
-		cof_col = vector[3];
-		cof_g = vector[4];
-		cof_w = vector[5];
-		cof_fit = vector[6];
+		cof_h = vector[0]; // landing height
+		cof_r = vector[1]; // rows cleared
+		cof_row = vector[2]; // row transition
+		cof_col = vector[3]; // column transition
+		cof_g = vector[4]; // buried holes
+		cof_w = vector[5]; // wells
+		cof_fit = vector[6]; // wall fitness
 	}
 
 	public void printLastChoice(){
@@ -470,7 +470,7 @@ public class PDelleFast implements IPlayer {
 //			System.out.println(">>> Start Run "+k);
 			for(int i = 0; i < numRuns; i++){
 				State s = new State();
-				PDelleFast p = new PDelleFast(new double[] {-1,1,-1,-k,-1,-1,1});
+				PDelleFast p = new PDelleFast(new double[] {-1,1,-1,-1,-k,-1,1});
 
 				while(!s.hasLost()){
 					s.makeMove(p.pickMove(s, s.legalMoves()));
