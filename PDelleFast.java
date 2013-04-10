@@ -370,9 +370,18 @@ public class PDelleFast implements IPlayer {
 		for(int i = 0; i < pWidth[piece][moveOrient]; i++){
 			for(int j = insert_height + pBottom[piece][moveOrient][i]; j < Math.min(insert_height+pTop[piece][moveOrient][i], ROWS); j++){
 				sucField[j][moveSlot+i] = 1;
-
+				int rowPos = j;
+				int colPos = moveSlot+i;
+				
+				if(colPos - 1 < 0 || sucField[rowPos][colPos-1] > 0)
+					score_fit++;
+				if(colPos + 1 >= State.COLS || sucField[rowPos][colPos+1] > 0)
+					score_fit++;
+				if(rowPos - 1 < 0 || sucField[rowPos-1][colPos] > 0) {
+					score_fit++;
+				}
 				// Check bottom touching
-				if(j == insert_height + pBottom[piece][moveOrient][i]){
+				/*if(j == insert_height + pBottom[piece][moveOrient][i]){
 					if(j > 0){
 						if(sucField[j-1][moveSlot+i] > 0){
 							score_fit += pFitScore[piece][moveOrient];
@@ -403,7 +412,7 @@ public class PDelleFast implements IPlayer {
 					} else {
 						score_fit += pFitScore[piece][moveOrient];
 					}
-				}
+				}*/
 			}
 		}
 	}
@@ -464,19 +473,20 @@ public class PDelleFast implements IPlayer {
 		int numRuns = 100;
 		ArrayList<Integer> total = new ArrayList<Integer>();
 //		long sum = 0;
-		for(int k = 0; k <= 10; k++) {
+		//for(int k = 0; k <= 10; k++) {
 			total.clear();
 			
 //			System.out.println(">>> Start Run "+k);
 			for(int i = 0; i < numRuns; i++){
 				State s = new State();
-				PDelleFast p = new PDelleFast(new double[] {-1,1,-1,-k,-1,-1,1});
+				PDelleFast p = new PDelleFast(new double[] {-1,1,-1,-1,-6,-2,0.25});
 
 				while(!s.hasLost()){
 					s.makeMove(p.pickMove(s, s.legalMoves()));
 				}
 
 				total.add(s.getRowsCleared());
+				System.out.println(s.getRowsCleared());
 //				sum += s.getRowsCleared();
 
 			}
@@ -494,7 +504,7 @@ public class PDelleFast implements IPlayer {
 			String res = total.toString();
 			System.out.println(res.substring(1,res.length()-1));
 //			System.out.println("<<< Finish Run "+k);
-		}
+		//}
 		System.out.println("DONE");
 
 
