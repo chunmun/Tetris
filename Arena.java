@@ -1,6 +1,5 @@
 package blueBlox;
 
-import java.text.DecimalFormat;
 import java.util.Vector;
 
 import blueBlox.StateGenerator.SG_TYPE;
@@ -15,15 +14,27 @@ public class Arena {
 	public static void main(String args[]){
 		// 1. Add your player into players
 		Vector<IPlayer> players = new Vector<IPlayer>();
-		players.add(new PlayerRandom());
-		players.add(new PlayerSkeleton());
+//		players.add(new PlayerRandom());
+//		players.add(new PlayerSkeleton());
+//		players.add(new PlayerGreedLeastH());D
+//		players.add(new PlayerGreedFlatTop());
+//		players.add(new PlayerGreedMakeRow());
+//		players.add(new PlayerGreedLeastGapH());
+//		players.add(new PlayerGLeastGMake());
+//		players.add(new PlayerGreedLessGapH(2));
+//		players.add(new PlayerGreedLeastGapF());
+//		players.add(new PlayerGreedLessGapF(2));
+//		players.add(new PlayerGLessGMake(2));
+//		players.add(new PlayerGMixedRankGHF());
+//		players.add(new PlayerGPDelleCherie());
+		players.add(new ShawnGreed());
 
 		// 2. Choose a generator - RANDOM, FIXED, FUNC
 		StateGenerator sg = new StateGenerator(SG_TYPE.RANDOM);
 
 		// 3. Let it rip with the number of runs
 		Arena Rumble = new Arena(players,sg);
-		Rumble.run(1000);
+		Rumble.run(100);
 	}
 
 	public Arena(Vector<IPlayer> players, StateGenerator sg){
@@ -75,15 +86,17 @@ public class Arena {
 		System.out.println("#Runs : " + this.runs);
 		System.out.println("Generator Type: " + sg.type);
 		System.out.println("\n===== Player Statistics =====");
-		System.out.println(String.format("%1$-20s | %2$12s | %3$12s","Name","Turns Lasted","Rows Cleared"));
+		System.out.println(String.format("%1$-20s | %2$12s | %3$12s | %4$12s | %5$12s","Name","Turns Lasted","Rows Cleared", "Minimum Rows", "Maximum Rows"));
 		
 		for(int i=0;i<active_rooms.size();i++){
 			Room r = active_rooms.get(i);
 			String name = r.player.getClass().getSimpleName();
 			double turns = r.avg_turns;
 			double rows_cleared = r.avg_rows;
+			int minRows = r.min_rows;
+			int maxRows = r.max_rows;
 			
-			System.out.println(String.format("%1$-20s | %2$12f | %3$12f",name,turns,rows_cleared));
+			System.out.println(String.format("%1$-20s | %2$12f | %3$12f | %4$12d | %5$12d",name,turns,rows_cleared,minRows,maxRows));
 		}
 	}
 	
@@ -105,6 +118,8 @@ class Room{
 	public int runs = 0;
 	public double avg_turns = 0.0;
 	public double avg_rows = 0.0;
+	public int min_rows = 1000000;
+	public int max_rows = 0;
 
 	public Room(IPlayer p, State s){
 		this.player = p;
@@ -119,7 +134,9 @@ class Room{
 			return;
 		}
 		avg_turns = ((runs * avg_turns) + state.getTurnNumber()) / (runs + 1); 
-		avg_rows = ((runs * avg_rows) + state.getRowsCleared()) / (runs + 1); 		
+		avg_rows = ((runs * avg_rows) + state.getRowsCleared()) / (runs + 1);
+		min_rows = min_rows < state.getRowsCleared() ? min_rows : state.getRowsCleared();
+		max_rows = max_rows > state.getRowsCleared() ? max_rows : state.getRowsCleared();
 		runs++;
 	}
 	
