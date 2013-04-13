@@ -1,7 +1,5 @@
 package blueBlox;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 import java.util.Vector;
 
@@ -451,61 +449,61 @@ public class PDelleFast implements IPlayer {
 	}	
 
 	public static void main(String args[]){
-		//		State s = new State();
-		//		new TFrame(s);
-		////		PDelleFast p = new PDelleFast(new double[] {-1,1,-1,-1,-6,-2,0});
-		//		PDelleFast p = new PDelleFast();
-		//		Random r = new Random(1);
-		//		while(!s.hasLost()) {
-		//			s.setNextPiece(Math.abs(r.nextInt())%7);
-		//			s.makeMove(p.pickMove(s,s.legalMoves()));
-		////			s.draw();
-		////			s.drawNext(0,0);
-		////			try {
-		////				Thread.sleep(1);
-		////			} catch (InterruptedException e) {
-		////				e.printStackTrace();
-		////			}	
-		//		}
-		//		s.draw();
-		//		s.drawNext(0,0);
-		//		System.out.println("You have completed "+s.getRowsCleared()+" rows.");
-		int numRuns = 100;
-		ArrayList<Integer> total = new ArrayList<Integer>();
-//		long sum = 0;
-		//for(int k = 0; k <= 10; k++) {
-			total.clear();
+				State s = new State();
+//				new TFrame(s);
+		//		PDelleFast p = new PDelleFast(new double[] {-1,1,-1,-1,-6,-2,0});
+				PDelleFast p = new PDelleFast();
+				Random r = new Random(1);
+				while(!s.hasLost()) {
+					s.setNextPiece(Math.abs(r.nextInt())%7);
+					s.makeMove(p.pickMove(s,s.legalMoves()));
+		//			s.draw();
+		//			s.drawNext(0,0);
+		//			try {
+		//				Thread.sleep(1);
+		//			} catch (InterruptedException e) {
+		//				e.printStackTrace();
+		//			}	
+				}
+//				s.draw();
+//				s.drawNext(0,0);
+				System.out.println("You have completed "+s.getRowsCleared()+" rows.");
+//		int numRuns = 100;
+//		ArrayList<Integer> total = new ArrayList<Integer>();
+////		long sum = 0;
+//		//for(int k = 0; k <= 10; k++) {
+//			total.clear();
 			
 //			System.out.println(">>> Start Run "+k);
-			for(int i = 0; i < numRuns; i++){
-				State s = new State();
-				PDelleFast p = new PDelleFast(new double[] {-1,1,-1,-1,-6,-2,0.25});
-
-				while(!s.hasLost()){
-					s.makeMove(p.pickMove(s, s.legalMoves()));
-				}
-
-				total.add(s.getRowsCleared());
-				System.out.println(s.getRowsCleared());
-//				sum += s.getRowsCleared();
-
-			}
+//			for(int i = 0; i < numRuns; i++){
+//				State s = new State();
+//				PDelleFast p = new PDelleFast(new double[] {-1,1,-1,-1,-6,-2,0.25});
 //
-//			double avg = (double)sum / (double)numRuns;
-//			double sq_total = 0;
+//				while(!s.hasLost()){
+//					s.makeMove(p.pickMove(s, s.legalMoves()));
+//				}
 //
-//			for(int j : total) {
-//				sq_total += Math.pow(j-avg, 2);
+//				total.add(s.getRowsCleared());
+//				System.out.println(s.getRowsCleared());
+////				sum += s.getRowsCleared();
+//
 //			}
-//
-//			double var = sq_total / (double)numRuns;
-//			System.out.println("Mean : "+avg);
-//			System.out.println("Variance: "+var);
-			String res = total.toString();
-			System.out.println(res.substring(1,res.length()-1));
-//			System.out.println("<<< Finish Run "+k);
-		//}
-		System.out.println("DONE");
+////
+////			double avg = (double)sum / (double)numRuns;
+////			double sq_total = 0;
+////
+////			for(int j : total) {
+////				sq_total += Math.pow(j-avg, 2);
+////			}
+////
+////			double var = sq_total / (double)numRuns;
+////			System.out.println("Mean : "+avg);
+////			System.out.println("Variance: "+var);
+//			String res = total.toString();
+//			System.out.println(res.substring(1,res.length()-1));
+////			System.out.println("<<< Finish Run "+k);
+//		//}
+//		System.out.println("DONE");
 
 
 	}
