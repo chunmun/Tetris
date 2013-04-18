@@ -17,7 +17,27 @@ public class Arena {
 		players.add(new PDelleCherie());
 		players.add(new PDelleFast());
 //		players.add(new ShawnGreed());
+//		players.add(new PlayerRandom());
+//		players.add(new PlayerSkeleton());
+//		players.add(new PlayerGreedLeastH());
+//		players.add(new PlayerGreedFlatTop());
+//		players.add(new PlayerGreedMakeRow());
+//		players.add(new PlayerGreedLeastGapH());
+//		players.add(new PlayerGLeastGMake());
+//		players.add(new PlayerGreedLessGapH(2));
+//		players.add(new PlayerGreedLeastGapF());
+//		players.add(new PlayerGreedLessGapF(2));
+//		players.add(new PlayerGLessGMake(2));
+//		players.add(new PlayerGMixedRankGHF());
+		players.add(new PlayerGPDelleCherie());
+//		players.add(new PDelleFast(new double[] {0.6669962749252368, 2.2483426798020165, 0.6669962749252368, 1.96398583652387, 1.3131737271348578, 1.3380444849503885, 2.2483426798020165}));
+//		players.add(new PDelleFast(new double[] {-1,1,-1,-1,-6,-2,0}));
+//		players.add(new PDelleFast());
+//		players.add(new PlayerGPDCForward());
+		
+>>>>>>> 16833515ef0190e1029b77391033deae693a1ddb
 
+		
 		// 2. Choose a generator - RANDOM, FIXED, FUNC
 		StateGenerator sg = new StateGenerator(SG_TYPE.RANDOM);
 
@@ -38,7 +58,6 @@ public class Arena {
 
 		for(int j=0;j<num_runs;j++){
 //			System.out.println(">>>>> Run #"+j+" running with "+active_rooms.size()+" players");
-
 			int turn = 1;
 
 			while(active_rooms.size() != 0) {
@@ -52,6 +71,7 @@ public class Arena {
 					r.state.makeMove(move);
 
 					if(r.state.hasLost()){
+						System.out.println("Ended with "+r.state.getRowsCleared());
 						dead_rooms.add(r);
 						r.collectStat();
 						active_rooms.remove(i);
@@ -60,9 +80,9 @@ public class Arena {
 				}
 				turn++;
 			}
-			
+			//System.out.println("<<<<< Run #"+j+" completed with "+turn+" turns");
 			resetRoomsAndSG();
-//			System.out.println("<<<<< Run #"+j+" completed with "+turn+" turns");
+			
 
 		}
 

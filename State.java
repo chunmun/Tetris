@@ -166,7 +166,6 @@ public class State {
 	//constructor
 	public State() {
 		nextPiece = randomPiece();
-
 	}
 	
 	//random integer, returns 0-6
@@ -180,6 +179,15 @@ public class State {
 	//gives legal moves for 
 	public int[][] legalMoves() {
 		return legalMoves[nextPiece];
+	}
+	
+	public int[][][] allLeg(){
+		return legalMoves;
+	}
+	
+	//gives you all the legal moves
+	public int[][] legalMoves(int piece){
+		return legalMoves[piece];
 	}
 	
 	//make a move based on the move index - its order in the legalMoves list
@@ -299,7 +307,7 @@ public class State {
 		label.rectangleLL(c, r, 1, 1);
 	}
 	
-	public void drawNext(int slot, int orient) {
+	public void drawNext(int orient, int slot) {
 		for(int i = 0; i < pWidth[nextPiece][orient]; i++) {
 			for(int j = pBottom[nextPiece][orient][i]; j <pTop[nextPiece][orient][i]; j++) {
 				drawBrick(i+slot, j+ROWS+1);
