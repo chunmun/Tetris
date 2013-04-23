@@ -1,6 +1,5 @@
 package blueBlox;
 
-import test.State;
 
 class Heuristics {
 	private final int WALLS_WEIGHT = 7; //6~8

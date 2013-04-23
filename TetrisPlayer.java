@@ -2,7 +2,7 @@ package blueBlox;
 
 import java.util.Random;
 
-public class PDelleFast implements IPlayer {
+public class TetrisPlayer {
 	public final int N_PIECES = 7;
 	protected final int ROWS = 21;
 	protected final int COLS = 10;
@@ -134,10 +134,10 @@ public class PDelleFast implements IPlayer {
 	protected boolean sucField1GG = false;
 
 
-	public PDelleFast(){
+	public TetrisPlayer(){
 	}
 
-	public PDelleFast(double vector[]){
+	public TetrisPlayer(double vector[]){
 		cof_h = vector[0];
 		cof_r = vector[1];
 		cof_row = vector[2];
@@ -147,7 +147,6 @@ public class PDelleFast implements IPlayer {
 		cof_fit = vector[6];
 	}
 
-	@Override
 	public int pickMove(State s, int[][] l) {
 		if(s.getRowsCleared() > 10000000){
 			return 0;
@@ -364,7 +363,7 @@ public class PDelleFast implements IPlayer {
 	public static void main(String args[]){
 		State s = new State();
 		new TFrame(s);
-		PDelleFast p = new PDelleFast();
+		TetrisPlayer p = new TetrisPlayer();
 		Random r = new Random();
 		while(!s.hasLost()) {
 			s.setNextPiece(Math.abs(r.nextInt())%7);
@@ -390,3 +389,4 @@ public class PDelleFast implements IPlayer {
 	}
 
 }
+

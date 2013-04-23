@@ -14,9 +14,10 @@ public class Arena {
 	public static void main(String args[]){
 		// 1. Add your player into players
 		Vector<IPlayer> players = new Vector<IPlayer>();
-		players.add(new PDelleCherie());
-		players.add(new PDelleFast());
-//		players.add(new ShawnGreed());
+//		players.add(new PDelleFast(new double[] {-1,1,-1,-1,-6,-2,0}));
+//		players.add(new PDelleFast(new double[] {-1,1,-1,-1,-6,-1,0.25}));
+//		players.add(new PDelleFast(new double[] {-1,1,-1,-1,-6,-1,1}));
+		players.add(new PDelleFast(new double[] {-1,1,-1,-1,-6,-2,0.25}));
 
 		// 2. Choose a generator - RANDOM, FIXED, FUNC
 		StateGenerator sg = new StateGenerator(SG_TYPE.RANDOM);
@@ -37,7 +38,7 @@ public class Arena {
 		this.runs = num_runs;
 
 		for(int j=0;j<num_runs;j++){
-//			System.out.println(">>>>> Run #"+j+" running with "+active_rooms.size()+" players");
+			System.out.println(">>>>> Run #"+j+" running with "+active_rooms.size()+" players");
 
 			int turn = 1;
 
@@ -62,7 +63,7 @@ public class Arena {
 			}
 			
 			resetRoomsAndSG();
-//			System.out.println("<<<<< Run #"+j+" completed with "+turn+" turns");
+			System.out.println("<<<<< Run #"+j+" completed with "+turn+" turns");
 
 		}
 
@@ -86,6 +87,7 @@ public class Arena {
 			int maxRows = r.max_rows;
 			
 			System.out.println(String.format("%1$-20s | %2$12f | %3$12f | %4$12d | %5$12d",name,turns,rows_cleared,minRows,maxRows));
+			((PDelleFast)r.player).printCofs();
 		}
 	}
 	

@@ -1,11 +1,6 @@
 package blueBlox;
 
-import java.util.Random;
 import java.util.Vector;
-
-import test.PDelleFast;
-import test.State;
-import test.Test;
 
 public class Tester {
 	public static void main(String args[]){

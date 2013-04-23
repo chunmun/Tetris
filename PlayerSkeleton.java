@@ -1,7 +1,5 @@
 package blueBlox;
 
-import test.State;
-import test.TFrame;
 
 public class PlayerSkeleton implements IPlayer{
 
